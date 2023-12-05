@@ -65,4 +65,4 @@ if __name__ == '__main__':
     for location in location_ranges:
         start_locations.append(location[0])
 
-    print(min(start_locations))
+    print("Part 2:", min(start_locations))

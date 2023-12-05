@@ -37,5 +37,4 @@ if __name__ == '__main__':
                     break
         locations.append(value)
 
-    locations.sort()
-    print(locations[0])
+    print("Part 1:", min(locations))
