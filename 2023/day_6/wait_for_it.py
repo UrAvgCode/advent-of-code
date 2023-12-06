@@ -4,9 +4,9 @@ import math
 
 
 def get_number_of_ways(time, distance):
-    root = math.sqrt(time ** 2 + 4 * -(distance + 1))
-    start = -0.5 * (-time + root)
-    end = -0.5 * (-time - root)
+    root = math.sqrt(time ** 2 - 4 * (distance + 1))
+    start = (time - root) / 2
+    end = (time + root) / 2
     return math.floor(end) - math.ceil(start) + 1
 
 
