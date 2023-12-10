@@ -1,28 +1,24 @@
 # --- Day 3: Rucksack Reorganization ---
 
+import string
+
 if __name__ == '__main__':
-    file = open("rucksack_reorganization_input", "r")
-    lines = file.readlines()
+    with open("rucksack_reorganization_input") as file:
+        rucksacks = file.read().strip().split("\n")
 
-    prioList = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-
+    priorities = {item: i + 1 for i, item in enumerate(string.ascii_letters)}
     priorities_one = 0
     priorities_two = 0
 
-    for i in range(len(lines)):
-        line = lines[i].strip()
+    for i, rucksack in enumerate(rucksacks):
+        second_compartment = set(rucksack[len(rucksack) // 2:])
+        item = next(item for item in rucksack if item in second_compartment)
+        priorities_one += priorities[item]
 
-        compartment_size = len(line) // 2
-        for j in range(compartment_size):
-            if line[j] in lines[i][compartment_size:]:
-                priorities_one += prioList.index(line[j]) + 1
-                break
+        if i % 3 == 0 and i + 2 < len(rucksacks):
+            item_set = set(rucksacks[i + 1]) & set(rucksacks[i + 2])
+            item = next(item for item in rucksack if item in item_set)
+            priorities_two += priorities[item]
 
-        if i % 3 == 0:
-            for j in range(len(lines[i])):
-                if line[j] in lines[i + 1] and lines[i][j] in lines[i + 2]:
-                    priorities_two += prioList.index(line[j]) + 1
-                    break
-
-    print("Part 1: " + str(priorities_one))
-    print("Part 2: " + str(priorities_two))
+    print("Part 1:", priorities_one)
+    print("Part 2:", priorities_two)
