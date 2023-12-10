@@ -49,21 +49,16 @@ def next_pipe(current, last):
             return "Start"
 
 
-def find_loop(start, last):
-    visited = []
-    last = last
+def find_loop(start, previous):
+    visited = set()
     current = start
     while current not in visited:
-        visited.append(current)
-        p_last = current
-        current = next_pipe(current, last)
-        last = p_last
+        if current == "Stop":
+            return False, visited
+        visited.add(current)
+        current, previous = next_pipe(current, previous), current
         if current == "Start":
             return True, visited
-        elif current == "Stop":
-            return False, visited
-        elif current[0] < 0 or current[1] < 0:
-            return False, visited
     return False, visited
 
 
@@ -71,28 +66,20 @@ if __name__ == '__main__':
     with open("pipe_maze_input") as file:
         pipe_map = file.read().strip().split("\n")
 
-        start = (0, 0)
         for y in range(len(pipe_map)):
             for x in range(len(pipe_map[y])):
                 if pipe_map[y][x] == 'S':
                     start = (y, x)
 
-        loop = False
-        visited = []
-        for y_dir in range(-1, 2, 2):
-            loop, visited = find_loop((start[0] + y_dir, start[1]), start)
+        for y_dir, x_dir in [(1, 0), (-1, 0), (0, 1), (0, -1)]:
+            loop, visited = find_loop((start[0] + y_dir, start[1] + x_dir), start)
             if loop:
                 break
-        else:
-            for x_dir in range(-1, 2, 2):
-                loop, visited = find_loop((start[0], start[1] + x_dir), start)
-                if loop:
-                    break
 
         new_map = []
         for y, row in enumerate(pipe_map):
             new_row = []
-            new_row_2 = []
+            new_extra_row = []
             for x, tile in enumerate(row):
                 if (y, x) in visited:
                     new_row.append(tile)
@@ -103,18 +90,18 @@ if __name__ == '__main__':
                     else:
                         new_row.append('.')
                     if tile == 'S' and pipe_map[y + 1][x] in "|LJ":
-                        new_row_2.append('N')
+                        new_extra_row.append('N')
                     elif tile in "|7F":
-                        new_row_2.append('N')
+                        new_extra_row.append('N')
                     else:
-                        new_row_2.append('.')
-                    new_row_2.append('.')
+                        new_extra_row.append('.')
+                    new_extra_row.append('.')
                 else:
                     new_row.extend(['.', '.'])
-                    new_row_2.extend(['.', '.'])
+                    new_extra_row.extend(['.', '.'])
 
             new_map.append(new_row)
-            new_map.append(new_row_2)
+            new_map.append(new_extra_row)
 
         fill_queue = deque([(0, 0)])
         filled = set()
