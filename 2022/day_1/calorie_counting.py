@@ -1,20 +1,11 @@
 # --- Day 1: Calorie Counting ---
 
 if __name__ == '__main__':
-    file = open("calorie_counting_input", "r")
-    lines = file.readlines()
+    with open("calorie_counting_input") as file:
+        elves = file.read().strip().split("\n\n")
 
-    calories_list = []
-    calories = 0
+    list_of_calories = [sum(int(calories) for calories in meals.split("\n")) for meals in elves]
+    list_of_calories.sort(reverse=True)
 
-    for line in lines:
-        if line == "\n":
-            calories_list.append(calories)
-            calories = 0
-        else:
-            calories += int(line)
-
-    calories_list.sort(reverse=True)
-
-    print("Part 1: " + str(calories_list[0]))
-    print("Part 2: " + str(calories_list[0] + calories_list[1] + calories_list[2]))
+    print("Part 1:", list_of_calories[0])
+    print("Part 2:", sum(list_of_calories[:3]))
