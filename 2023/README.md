@@ -1,6 +1,6 @@
 # 🎄 Advent of Code 2023 🎄
 
-### Collected Stars 16/50 :star:
+### Collected Stars 22/50 :star:
 | Day | Status |
 | ----------------------------------------------- | ----- |
 | [Day 1: Trebuchet?!](day_1)                     | ⭐ ⭐ |
@@ -12,3 +12,5 @@
 | [Day 7: Camel Cards](day_7)                     | ⭐ ⭐ |
 | [Day 8: Haunted Wasteland](day_8)               | ⭐ ⭐ |
 | [Day 9: Mirage Maintenance](day_9)              | ⭐ ⭐ |
+| [Day 10: Pipe Maze](day_10)                     | ⭐ ⭐ |
+| [Day 11: Cosmic Expansion](day_11)              | ⭐ ⭐ |

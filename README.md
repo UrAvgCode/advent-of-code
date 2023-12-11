@@ -15,7 +15,7 @@ My solutions to the [Advent of Code](https://adventofcode.com/) puzzles in Pytho
 |     Year     |  Stars   |
 | ------------ | ---------|
 | [2022](2022) | 24/50 ⭐ |
-| [2023](2023) | 16/50 ⭐ |
+| [2023](2023) | 22/50 ⭐ |
 
 #
 ### Repository Structure
