@@ -29,7 +29,7 @@ def directory_size_list(node):
 
 if __name__ == '__main__':
     with open("no_space_left_on_device_input") as file:
-        commands = [line for line in file.read().splitlines() if not line.startswith("$ ls")]
+        commands = file.read().splitlines()
 
     current_dir = root = Node()
     for command in commands:
