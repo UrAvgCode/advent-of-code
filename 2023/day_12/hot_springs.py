@@ -10,14 +10,11 @@ def get_arrangements(record, criteria, size=0):
         return 1 if not criteria or (len(criteria) == 1 and criteria[0] == size) else 0
 
     arrangements = 0
-    match record[0]:
-        case '?':
-            arrangements += get_arrangements(record.replace('?', '#', 1), criteria, size)
-            arrangements += get_arrangements(record.replace('?', '.', 1), criteria, size)
-        case '#':
+    for case in ('#', '.') if record[0] == '?' else record[0]:
+        if case == '#':
             if criteria:
                 arrangements += get_arrangements(record[1:], criteria, size + 1)
-        case '.':
+        else:
             if 0 < size == criteria[0]:
                 arrangements += get_arrangements(record[1:], criteria[1:])
             elif size == 0:
