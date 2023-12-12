@@ -2,48 +2,45 @@
 import math
 
 
+class Knot:
+    moveDict = {'U': (0, 1), 'D': (0, -1), 'R': (1, 0), 'L': (-1, 0)}
+
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+    def move(self, direction):
+        self.x += self.moveDict[direction][0]
+        self.y += self.moveDict[direction][1]
+
+    def distance(self, other):
+        return math.sqrt((self.x - other.x) ** 2 + (self.y - other.y) ** 2)
+
+
 def sign(x):
-    if x < 0:
-        return -1
-    elif x > 0:
-        return 1
-    else:
-        return 0
+    return (x > 0) - (x < 0)
 
 
-def calculate_visited(knot_amount, inputs):
-    knots_x = [0 for _ in range(knot_amount)]
-    knots_y = [0 for _ in range(knot_amount)]
+def calculate_visited(knot_amount):
+    knots = [Knot(0, 0) for _ in range(knot_amount)]
 
-    visited = {"0,0"}
-
-    for line in inputs:
-        steps = int(line.split()[1])
-
-        for i in range(steps):
-            if line[0] == "U":
-                knots_y[0] += 1
-            elif line[0] == "D":
-                knots_y[0] -= 1
-            elif line[0] == "R":
-                knots_x[0] += 1
-            elif line[0] == "L":
-                knots_x[0] -= 1
-
-            for j in range(1, len(knots_x)):
-                distance = math.sqrt((knots_x[j - 1] - knots_x[j]) ** 2 + (knots_y[j - 1] - knots_y[j]) ** 2)
-                if distance >= 2:
-                    knots_x[j] += sign(knots_x[j - 1] - knots_x[j])
-                    knots_y[j] += sign(knots_y[j - 1] - knots_y[j])
-                    if j == len(knots_x) - 1:
-                        visited.add(str(knots_x[j]) + "," + str(knots_y[j]))
+    visited = {(0, 0)}
+    for direction, steps in motions:
+        for _ in range(steps):
+            knots[0].move(direction)
+            for i, (prev_knot, knot) in enumerate(zip(knots, knots[1:]), start=1):
+                if knot.distance(prev_knot) >= 2:
+                    knot.x += sign(prev_knot.x - knot.x)
+                    knot.y += sign(prev_knot.y - knot.y)
+                    if i == knot_amount - 1:
+                        visited.add((knot.x, knot.y))
 
     return len(visited)
 
 
 if __name__ == '__main__':
-    file = open("rope_bridge_input", "r")
-    lines = file.readlines()
+    with open("rope_bridge_input") as file:
+        motions = [(d, int(s)) for d, s in (line.split() for line in file.read().splitlines())]
 
-    print("Part 1: " + str(calculate_visited(2, lines)))
-    print("Part 2: " + str(calculate_visited(10, lines)))
+    print("Part 1:", calculate_visited(2))
+    print("Part 2:", calculate_visited(10))
