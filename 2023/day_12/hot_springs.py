@@ -5,63 +5,45 @@ from functools import cache
 
 
 @cache
-def get_recursive_sum(record, criteria, size=0):
-    if len(record) == 0:
-        return 1 if len(criteria) == 0 or (len(criteria) == 1 and criteria[0] == size) else 0
+def get_arrangements(record, criteria, size=0):
+    if not record:
+        return 1 if not criteria or (len(criteria) == 1 and criteria[0] == size) else 0
 
     arrangements = 0
     match record[0]:
         case '?':
-            arrangements += get_recursive_sum(record.replace('?', '#', 1), criteria, size)
-            arrangements += get_recursive_sum(record.replace('?', '.', 1), criteria, size)
+            arrangements += get_arrangements(record.replace('?', '#', 1), criteria, size)
+            arrangements += get_arrangements(record.replace('?', '.', 1), criteria, size)
         case '#':
-            if len(criteria) > 0:
-                arrangements += get_recursive_sum(record[1:], criteria, size + 1)
+            if criteria:
+                arrangements += get_arrangements(record[1:], criteria, size + 1)
         case '.':
-            if size > 0:
-                if len(criteria) > 0:
-                    if size == criteria[0]:
-                        arrangements += get_recursive_sum(record[1:], criteria[1:])
-            else:
-                arrangements += get_recursive_sum(record[1:], criteria)
+            if 0 < size == criteria[0]:
+                arrangements += get_arrangements(record[1:], criteria[1:])
+            elif size == 0:
+                arrangements += get_arrangements(record[1:], criteria)
 
     return arrangements
 
 
 if __name__ == '__main__':
     with open("hot_springs_input") as file:
-        springs = file.read().strip().split("\n")
+        springs = [row.split() for row in file.read().split("\n")]
+
+    springs_list = []
+    for record, criteria in springs:
+        criteria = tuple(int(criteria) for criteria in criteria.split(","))
+        springs_list.append((record, criteria))
 
     start_time = time.perf_counter()
-    sum_of_arrangements = 0
-    for row in springs:
-        recording, duplicates = row.split()
-        duplicates = tuple([int(duplicate) for duplicate in duplicates.split(",")])
-
-        unknowns = [char for char in recording if char == '?']
-        result = get_recursive_sum(recording, duplicates)
-        sum_of_arrangements += result
-
-    print("Part 1:", sum_of_arrangements)
+    print("Part 1:", sum(
+        get_arrangements(record, criteria)
+        for record, criteria in springs_list))
     print(f"Time: {time.perf_counter() - start_time}s\n")
 
     start_time = time.perf_counter()
-    sum_of_arrangements = 0
-    for row in springs:
-        recording, duplicates = row.split()
-        duplicates = tuple([int(duplicate) for duplicate in duplicates.split(",")] * 5)
-
-        new_recording = ""
-        for i in range(5):
-            new_recording += recording
-            if i != 4:
-                new_recording += '?'
-
-        recording = new_recording
-
-        unknowns = [char for char in recording if char == '?']
-        result = get_recursive_sum(recording, duplicates)
-        sum_of_arrangements += result
-
-    print("Part 2:", sum_of_arrangements)
+    print("Part 2:", sum(
+        get_arrangements((("?" + record) * 5)[1:], criteria * 5)
+        for record, criteria in springs_list
+    ))
     print(f"Time: {time.perf_counter() - start_time}s")
