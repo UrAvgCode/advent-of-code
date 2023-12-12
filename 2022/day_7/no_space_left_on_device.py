@@ -1,78 +1,51 @@
 # --- Day 7: No Space Left On Device ---
 
 class Node:
-    def __init__(self, name, parent):
-        self.name = name
-        self.size = 0
-        self.children = []
+    def __init__(self, parent=None):
         self.parent = parent
+        self.children = dict()
+        self.size = 0
+
+    def __getitem__(self, item):
+        if item == "..":
+            return self.parent
+        elif item not in self.children:
+            self.children[item] = Node(self)
+        return self.children[item]
 
 
-def set_directory_size(node):
-    if len(node.children) != 0:
-        for child in node.children:
-            set_directory_size(child)
-            node.size += child.size
+def analyze_disk_usage(folder):
+    for child in folder.children.values():
+        folder.size += analyze_disk_usage(child)
+    return folder.size
 
 
-def directory_size_list(node, size_list):
-    for child in node.children:
-        directory_size_list(child, size_list)
-    size_list.append(node.size)
+def directory_size_list(node):
+    sizes = [child.size for child in node.children.values()]
+    for child in node.children.values():
+        sizes.extend(directory_size_list(child))
+    return sizes
 
 
 if __name__ == '__main__':
-    file = open("no_space_left_on_device_input", "r")
-    lines = file.readlines()
+    with open("no_space_left_on_device_input") as file:
+        commands = [line for line in file.read().splitlines() if not line.startswith("$ ls")]
 
-    root = Node("root", "")
+    current_dir = root = Node()
+    for command in commands:
+        ident, name = command.rsplit(' ', 1)
+        if ident == "$ cd":
+            current_dir = current_dir[name]
+        elif ident.isnumeric():
+            current_dir.size += int(ident)
 
-    currentDirectory = root
+    analyze_disk_usage(root)
+    directory_sizes = directory_size_list(root)
 
-    for line in lines:
-        parts = line.strip().split()
-        if parts[0] == "$":
-            if parts[1] == "ls":
-                continue
-            elif parts[1] == "cd":
-                if parts[2] == "..":
-                    currentDirectory = currentDirectory.parent
-                    continue
-                else:
-                    find = False
-                    for directory in currentDirectory.children:
-                        if parts[2] == directory.name:
-                            currentDirectory = directory
-                            find = True
-                            break
+    small_directories_size = sum(size for size in directory_sizes if size <= 100000)
 
-                    if not find:
-                        newDir = Node(parts[2], currentDirectory)
-                        currentDirectory.children.append(newDir)
-                        currentDirectory = newDir
+    needed_space = root.size - 40000000
+    deletion_size = min(size for size in directory_sizes if needed_space < size)
 
-        elif parts[0] == "dir":
-            continue
-        else:
-            currentDirectory.size += int(parts[0])
-
-    set_directory_size(root)
-
-    directory_sizes = []
-    directory_size_list(root, directory_sizes)
-
-    total_directories_size = 0
-    for size in directory_sizes:
-        if size <= 100000:
-            total_directories_size += size
-
-    available_space = 70000000 - root.size
-    needed_space = 30000000 - available_space
-
-    deletion_size = root.size
-    for directory_size in directory_sizes:
-        if needed_space < directory_size < deletion_size:
-            deletion_size = directory_size
-
-    print("Part 1: " + str(total_directories_size))
-    print("Part 2: " + str(deletion_size))
+    print("Part 1:", small_directories_size)
+    print("Part 2:", deletion_size)
