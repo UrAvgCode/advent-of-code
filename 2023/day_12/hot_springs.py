@@ -36,6 +36,19 @@ if __name__ == '__main__':
     sum_of_arrangements = 0
     for row in springs:
         recording, duplicates = row.split()
+        duplicates = tuple([int(duplicate) for duplicate in duplicates.split(",")])
+
+        unknowns = [char for char in recording if char == '?']
+        result = get_recursive_sum(recording, duplicates)
+        sum_of_arrangements += result
+
+    print("Part 1:", sum_of_arrangements)
+    print(f"Time: {time.perf_counter() - start_time}s\n")
+
+    start_time = time.perf_counter()
+    sum_of_arrangements = 0
+    for row in springs:
+        recording, duplicates = row.split()
         duplicates = tuple([int(duplicate) for duplicate in duplicates.split(",")] * 5)
 
         new_recording = ""
