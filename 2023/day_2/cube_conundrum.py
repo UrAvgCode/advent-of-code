@@ -1,30 +1,24 @@
 # --- Day 2: Cube Conundrum ---
 
+def get_cube_counts(games):
+    cube_counts = []
+    for game in games:
+        color_counts = {"red": 0, "green": 0, "blue": 0}
+        for count_str, color in (cube.split() for cube in game):
+            count = int(count_str)
+            color_counts[color] = max(count, color_counts[color])
+        cube_counts.append((color_counts["red"], color_counts["green"], color_counts["blue"]))
+    return cube_counts
+
+
 if __name__ == '__main__':
-    file = open("cube_conundrum_input", "r")
-    lines = file.readlines()
+    with open("cube_conundrum_input") as file:
+        games = [game.split(": ")[1].split(', ') for game in file.read().replace(';', ',').splitlines()]
 
-    added_ids = 0
-    added_powers = 0
+    cube_counts = get_cube_counts(games)
+    cube_products = sum(red * green * blue for red, green, blue in cube_counts)
+    valid_game_ids = sum(game_id for game_id, (red, green, blue) in enumerate(cube_counts, 1)
+                         if red <= 12 and green <= 13 and blue <= 14)
 
-    for line in lines:
-        parts = line.split()
-
-        parts.pop(0)
-        game_id = int(parts.pop(0).replace(":", ""))
-        amounts = {"red": 0, "green": 0, "blue": 0}
-
-        for i in range(len(parts) // 2):
-            amount = int(parts.pop(0))
-            color = parts.pop(0).replace(",", "")
-            color = color.replace(";", "")
-
-            amounts[color] = max(amount, amounts[color])
-
-        if amounts["red"] <= 12 and amounts["green"] <= 13 and amounts["blue"] <= 14:
-            added_ids += game_id
-
-        added_powers += amounts["red"] * amounts["green"] * amounts["blue"]
-
-    print("Part 1: " + str(added_ids))
-    print("Part 2: " + str(added_powers))
+    print("Part 1:", valid_game_ids)
+    print("Part 2:", cube_products)
