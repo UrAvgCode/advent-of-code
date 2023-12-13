@@ -6,26 +6,25 @@ from collections import deque
 def get_reflection_sum(accuracy=0):
     reflection_sum = 0
     for pattern in patterns:
-        transpose = list(zip(*pattern))
+        transposed_pattern = list(zip(*pattern))
 
-        for mult, dir_pattern in enumerate((transpose, pattern)):
-            for equal in range(len(dir_pattern)):
-                row_que = deque()
+        for is_horizontal, directed_pattern in enumerate((transposed_pattern, pattern)):
+            for mirror_position in range(1, len(directed_pattern)):
+                reality = deque(directed_pattern[:mirror_position])
+                reflection = deque(directed_pattern[mirror_position:])
                 difference = 0
-                for i, row in enumerate(dir_pattern):
-                    if i < equal:
-                        row_que.append(row)
-                    elif row_que:
-                        for char, char2 in zip(row, row_que.pop()):
-                            if char != char2:
-                                difference += 1
-                        if difference > accuracy:
-                            break
+
+                while reality and reflection:
+                    opposites = zip(reality.pop(), reflection.popleft())
+                    difference += sum(a != b for a, b in opposites)
+
+                    if difference > accuracy:
+                        break
                 else:
-                    if mult:
-                        equal *= 100
                     if difference == accuracy:
-                        reflection_sum += equal
+                        reflection_sum += mirror_position * 100 if is_horizontal else mirror_position
+                        break
+
     return reflection_sum
 
 
