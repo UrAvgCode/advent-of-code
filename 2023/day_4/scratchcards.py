@@ -1,37 +1,23 @@
 # --- Day 4: Scratchcards ---
 
 if __name__ == '__main__':
-    file = open("scratchcards_input", "r")
-    lines = file.readlines()
+    with open("scratchcards_input") as file:
+        lines = file.read().splitlines()
 
-    score = 0
-    count = 0
-    scratchcards = [1 for i in range(len(lines))]
+    total_points = 0
+    scratchcards = [1] * len(lines)
 
-    for card_num in range(len(lines)):
-        parts = lines[card_num].split("|")
-        left = parts[0].split()[2:]
-        right = parts[1].split()
+    for card_num, line in enumerate(lines):
+        left, right = line.split("|")
+        winning_numbers = set(map(int, left.split()[2:]))
+        my_numbers = set(map(int, right.split()))
 
-        winning_numbers = set()
-        my_numbers = set()
+        matches = len(my_numbers & winning_numbers)
+        if matches:
+            total_points += 2 ** (matches - 1)
 
-        for number in left:
-            winning_numbers.add(int(number))
-        for number in right:
-            my_numbers.add(int(number))
+        for i in range(card_num + 1, min(card_num + matches + 1, len(scratchcards))):
+            scratchcards[i] += scratchcards[card_num]
 
-        matches = len(my_numbers.intersection(winning_numbers))
-
-        if matches > 0:
-            score += 2 ** (matches - 1)
-
-        for i in range(card_num + 1, card_num + matches + 1):
-            if i < len(scratchcards):
-                scratchcards[i] += scratchcards[card_num]
-
-    for i in range(len(scratchcards)):
-        count += scratchcards[i]
-
-    print("Part 1: ", score)
-    print("Part 2: ", count)
+    print("Part 1:", total_points)
+    print("Part 2:", sum(scratchcards))
