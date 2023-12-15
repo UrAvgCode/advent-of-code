@@ -1,7 +1,7 @@
 # --- Day 14: Parabolic Reflector Dish --- Part Two ---
 
-def spin_cycle(dish):
-    dish_list = [list(line) for line in dish]
+def spin_cycle(dish) -> tuple:
+    dish_list = list(map(list, dish))
     for _ in range(4):
         for line in dish_list:
             last = 0
@@ -12,7 +12,7 @@ def spin_cycle(dish):
                     last += 1
                 elif char == "#":
                     last = i + 1
-        dish_list = [list(line) for line in list(zip(*dish_list))[::-1]]
+        dish_list = [list(line) for line in reversed(list(zip(*dish_list)))]
     return tuple(map(tuple, dish_list))
 
 
@@ -20,36 +20,22 @@ if __name__ == '__main__':
     with open("parabolic_reflector_dish_input") as file:
         original_dish = tuple(zip(*file.read().splitlines()))
 
-    dish_dict = {}
-    loop_dish = ()
-    new_dish = original_dish
+    dish_states = [original_dish]
     while True:
-        previous_dish = new_dish
-        if previous_dish not in dish_dict:
-            new_dish = spin_cycle(new_dish)
-            dish_dict[previous_dish] = new_dish
-        else:
-            loop_dish = previous_dish
+        new_dish = spin_cycle(dish_states[-1])
+        if new_dish in dish_states:
             break
+        dish_states.append(new_dish)
 
-    before_loop = 0
-    new_dish = original_dish
-    while True:
-        previous_dish = new_dish
-        if previous_dish == loop_dish:
-            break
-        else:
-            before_loop += 1
-            new_dish = dish_dict.pop(previous_dish)
+    loop_start = dish_states.index(new_dish)
+    loop_length = len(dish_states) - loop_start
+    rest_rounds = (10 ** 9 - loop_start) % loop_length
+    final_dish = dish_states[loop_start + rest_rounds]
 
-    rest_rounds = (10 ** 9 - before_loop) % len(dish_dict)
-
-    result_element = list(dish_dict.keys())[rest_rounds]
-
-    weight = 0
-    for line in result_element:
+    load_on_beams = 0
+    for line in final_dish:
         for i, char in enumerate(line):
             if char == 'O':
-                weight += len(line) - i
+                load_on_beams += len(line) - i
 
-    print("Part 2:", weight)
+    print("Part 2:", load_on_beams)
