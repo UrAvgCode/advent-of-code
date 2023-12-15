@@ -1,6 +1,6 @@
 # 🎄 Advent of Code 2023 🎄
 
-### Collected Stars 26/50 ⭐
+### Collected Stars 28/50 ⭐
 
 | Day                                             | Status |
 |-------------------------------------------------|--------|
@@ -17,3 +17,4 @@
 | [Day 11: Cosmic Expansion](day_11)              | ⭐ ⭐    |
 | [Day 12: Hot Springs](day_12)                   | ⭐ ⭐    |
 | [Day 13: Point of Incidence](day_13)            | ⭐ ⭐    |
+| [Day 14: Parabolic Reflector Dish](day_14)      | ⭐ ⭐    |
