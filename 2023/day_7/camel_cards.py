@@ -24,7 +24,6 @@ def get_type_score(amounts):
 
 
 def calculate_winnings(hands, strengths, joker=False):
-    sort_order = {card: i for i, card in enumerate(strengths + types)}
     bets = []
     for hand, bid in hands:
         card_counts = Counter(hand)
@@ -35,6 +34,7 @@ def calculate_winnings(hands, strengths, joker=False):
         sort_rank = [get_type_score(card_counts)] + list(hand)
         bets.append((sort_rank, bid))
 
+    sort_order = {card: i for i, card in enumerate(strengths + types)}
     bets.sort(key=lambda sort_key: [sort_order[card] for card in sort_key[0]])
     return sum(rank * bet for rank, (_, bet) in enumerate(bets, 1))
 
