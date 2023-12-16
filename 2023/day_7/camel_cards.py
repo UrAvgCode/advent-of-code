@@ -1,81 +1,51 @@
 # --- Day 7: Camel Cards ---
 
-def get_card_amounts(cards):
-    amounts = {}
-    for card in cards:
-        if card in amounts:
-            amounts[card] += 1
-        else:
-            amounts[card] = 1
-    return amounts
+from collections import Counter
+
+types = ["high card", "pair", "two pair", "three", "full house", "four", "five"]
 
 
 def get_type_score(amounts):
     match len(amounts):
-        case 1:
-            return 6
+        case 0 | 1:
+            return "five"
         case 2:
-            for card in amounts:
-                if amounts[card] == 4:
-                    return 5
-            return 4
+            if 4 in amounts.values():
+                return "four"
+            return "full house"
         case 3:
-            for card in amounts:
-                if amounts[card] == 3:
-                    return 3
-            return 2
+            if 3 in amounts.values():
+                return "three"
+            return "two pair"
         case 4:
-            return 1
+            return "pair"
         case _:
-            return 0
+            return "high card"
 
 
-def part_one(hands):
-    order = "23456789TJQKA"
+def calculate_winnings(hands, strengths, joker=False):
+    sort_order = {card: i for i, card in enumerate(strengths + types)}
     bets = []
-    for hand in hands:
-        rank_value = 0
-        for j, card in enumerate(reversed(hand[0])):
-            rank_value += order.index(card) * (13 ** j)
-        else:
-            amounts = get_card_amounts(hand[0])
-            rank_value += get_type_score(amounts) * (13 ** 5)
-        bets.append((rank_value, hand[1]))
+    for hand, bid in hands:
+        card_counts = Counter(hand)
+        if joker:
+            joker_count = card_counts.pop('J', 0) if joker else 0
+            for card in card_counts:
+                card_counts[card] += joker_count
+        sort_rank = [get_type_score(card_counts)] + list(hand)
+        bets.append((sort_rank, bid))
 
-    bets.sort()
-    solution = 0
-    for i, bet in enumerate(bets):
-        solution += (i + 1) * bet[1]
-    return solution
-
-
-def part_two(hands):
-    order = "J23456789TQKA"
-    bets = []
-    for hand in hands:
-        rank_value = 0
-        for j, card in enumerate(reversed(hand[0])):
-            rank_value += order.index(card) * (13 ** j)
-        else:
-            amounts = get_card_amounts(hand[0])
-            if 'J' in amounts and len(amounts) != 1:
-                j_count = amounts.pop('J')
-                for card in amounts:
-                    amounts[card] += j_count
-            rank_value += get_type_score(amounts) * (13 ** 5)
-        bets.append((rank_value, hand[1]))
-
-    bets.sort()
-    solution = 0
-    for i, bet in enumerate(bets):
-        solution += (i + 1) * bet[1]
-    return solution
+    bets.sort(key=lambda sort_key: [sort_order[card] for card in sort_key[0]])
+    return sum(rank * bet for rank, (_, bet) in enumerate(bets, 1))
 
 
 if __name__ == '__main__':
     with open("camel_cards_input") as file:
-        lines = file.read().strip().split("\n")
-    hands_list = [(line.split()[0], int(line.split()[1])) for line in lines]
+        lines = file.read().splitlines()
+    hands = [(hand, int(bid)) for hand, bid in (line.split() for line in lines)]
 
-    print("Part 1:", part_one(hands_list))
-    print("Part 2:", part_two(hands_list))
+    strengths_one = ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A']
+    strengths_two = ['J', '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'Q', 'K', 'A']
+
+    print("Part 1:", calculate_winnings(hands, strengths_one))
+    print("Part 2:", calculate_winnings(hands, strengths_two, True))
