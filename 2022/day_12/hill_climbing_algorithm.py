@@ -1,62 +1,53 @@
 # --- Day 12: Hill Climbing Algorithm ---
 
-abc = "abcdefghijklmnopqrstuvwxyz"
+from collections import deque
 
 
 def height(char):
     if char == 'S':
-        return 0
+        return ord('a')
     elif char == 'E':
-        return 25
-    elif char != '\n':
-        return abc.index(char)
+        return ord('z')
     else:
-        return 100
+        return ord(char)
 
 
-def find_shortest_path(start):
-    move_queue = [start]
+def find_shortest_path(heightmap, start):
+    move_queue = deque([start])
     visited = set()
 
-    while True:
-        if len(move_queue) == 0:
-            return -1
-        move = move_queue.pop(0)
-        x = move[0]
-        y = move[1]
-        moves = move[2]
-
-        if lines[y][x] == 'E':
-            return moves
+    while move_queue:
+        x, y, moves = move_queue.popleft()
 
         if (x, y) in visited:
             continue
         visited.add((x, y))
 
-        if x < len(lines[y]) - 1 and height(lines[y][x]) >= height(lines[y][x + 1]) - 1:
-            move_queue.append((x + 1, y, moves + 1))
-        if x > 0 and height(lines[y][x]) >= height(lines[y][x - 1]) - 1:
-            move_queue.append((x - 1, y, moves + 1))
-        if y != 0 and height(lines[y][x]) >= height(lines[y - 1][x]) - 1:
-            move_queue.append((x, y - 1, moves + 1))
-        if y != len(lines) - 1 and height(lines[y][x]) >= height(lines[y + 1][x]) - 1:
-            move_queue.append((x, y + 1, moves + 1))
+        if heightmap[y][x] == 'E':
+            return moves
+
+        for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+            new_x, new_y = x + dx, y + dy
+            if 0 <= new_x < len(heightmap[y]) and 0 <= new_y < len(heightmap) and height(heightmap[y][x]) >= height(
+                    heightmap[new_y][new_x]) - 1:
+                move_queue.append((new_x, new_y, moves + 1))
+
+    return float('inf')
 
 
 if __name__ == '__main__':
-    file = open("hill_climbing_algorithm_input", "r")
-    lines = file.readlines()
+    with open("hill_climbing_algorithm_input") as file:
+        heightmap = file.read().splitlines()
 
-    distance_from_start = -1
-    distances = []
-    for i in range(len(lines)):
-        for j in range(len(lines[i])):
-            if lines[i][j] == 'a' or lines[i][j] == 'S':
-                distance = find_shortest_path((j, i, 0))
-                if distance != -1:
-                    distances.append(distance)
-                    if lines[i][j] == 'S':
-                        distance_from_start = distance
+    distance_from_start = float('inf')
+    min_distance = float('inf')
+    for y, row in enumerate(heightmap):
+        for x, char in enumerate(row):
+            if char == 'a':
+                distance = find_shortest_path(heightmap, (x, y, 0))
+                min_distance = min(min_distance, distance)
+            elif char == 'S':
+                distance_from_start = find_shortest_path(heightmap, (x, y, 0))
 
-    print("Part 1: " + str(distance_from_start))
-    print("Part 2: " + str(min(distances)))
+    print("Part 1:", distance_from_start)
+    print("Part 2:", min_distance)
