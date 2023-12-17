@@ -1,48 +1,41 @@
 # --- Day 17: Reservoir Research ---
 
-from bisect import insort
+from heapq import heappop, heappush
+from time import perf_counter
 
 
 def get_min_heat_loss(heat_map, braking_duration=0, maximum_speed=3):
-    # heat_loss, x, y, x_dir, y_dir, speed
-    crucible_queue = [(0, 0, 0, 1, 0, 0), (0, 0, 0, 0, 1, 0)]
-    crucible_history = dict()
+    crucible_queue = [(0, 0, 0, 0, 0, 0)]
+    crucible_history = set()
 
-    min_heat_loss = 999999
+    rows, columns = len(heat_map), len(heat_map[0])
+    destination = (columns - 1, rows - 1)
+
     while crucible_queue:
-        heat_loss, x, y, x_dir, y_dir, speed = crucible_queue.pop(0)
+        heat_loss, x, y, x_dir, y_dir, speed = heappop(crucible_queue)
 
-        if heat_loss >= min_heat_loss:
+        state = (x, y, x_dir, y_dir, speed)
+        if state in crucible_history:
             continue
+        crucible_history.add(state)
 
-        if (x, y, x_dir, y_dir, speed) in crucible_history:
-            if crucible_history[(x, y, x_dir, y_dir, speed)] <= heat_loss:
-                continue
+        if (x, y) == destination and speed >= braking_duration:
+            return heat_loss
 
-        crucible_history[(x, y, x_dir, y_dir, speed)] = heat_loss
-
-        if x == len(heat_map[y]) - 1 and y == len(heat_map) - 1 and speed >= braking_duration:
-            min_heat_loss = min(min_heat_loss, heat_loss)
-            break
-
-        next_x, next_y = x + x_dir, y + y_dir
-        if speed < maximum_speed and 0 <= next_x < len(heat_map[0]) and 0 <= next_y < len(heat_map):
-            insort(crucible_queue,
-                   (heat_loss + heat_map[next_y][next_x], next_x, next_y, x_dir, y_dir, speed + 1))
-
-        if speed >= braking_duration:
+        if speed >= braking_duration or not speed:
             if not x_dir:
-                if x + 1 < len(heat_map[y]):
-                    insort(crucible_queue, (heat_loss + heat_map[y][x + 1], x + 1, y, 1, 0, 1))
-                if x - 1 >= 0:
-                    insort(crucible_queue, (heat_loss + heat_map[y][x - 1], x - 1, y, -1, 0, 1))
-            elif not y_dir:
-                if y + 1 < len(heat_map):
-                    insort(crucible_queue, (heat_loss + heat_map[y + 1][x], x, y + 1, 0, 1, 1))
-                if y - 1 >= 0:
-                    insort(crucible_queue, (heat_loss + heat_map[y - 1][x], x, y - 1, 0, -1, 1))
+                for i in (1, -1):
+                    if 0 <= x + i < columns:
+                        heappush(crucible_queue, (heat_loss + heat_map[y][x + i], x + i, y, i, 0, 1))
+            if not y_dir:
+                for i in (1, -1):
+                    if 0 <= y + i < rows:
+                        heappush(crucible_queue, (heat_loss + heat_map[y + i][x], x, y + i, 0, i, 1))
 
-    return min_heat_loss
+        if speed < maximum_speed:
+            new_x, new_y = x + x_dir, y + y_dir
+            if 0 <= new_x < rows and 0 <= new_y < columns:
+                heappush(crucible_queue, (heat_loss + heat_map[new_y][new_x], new_x, new_y, x_dir, y_dir, speed + 1))
 
 
 if __name__ == '__main__':
@@ -51,5 +44,10 @@ if __name__ == '__main__':
 
     heat_map = tuple(tuple(int(char) for char in line) for line in lines)
 
+    start_time = perf_counter()
     print("Part 1:", get_min_heat_loss(heat_map))
-    print("Part 2:", get_min_heat_loss(heat_map, 4, 10))
+    print("Time: ", perf_counter() - start_time)
+
+    start_time = perf_counter()
+    print("\nPart 2:", get_min_heat_loss(heat_map, 4, 10))
+    print("Time: ", perf_counter() - start_time)
