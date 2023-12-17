@@ -1,32 +1,27 @@
 # --- Day 10: Cathode-Ray Tube ---
 
 if __name__ == '__main__':
-    file = open("cathode-ray_tube_input", "r")
-    lines = file.readlines()
+    with open("cathode-ray_tube_input") as file:
+        instructions = file.read().splitlines()
 
-    cycle_list = []
-    for line in lines:
-        parts = line.split()
-        cycle_list.append(0)
-        if parts[0] == "addx":
-            cycle_list.append(int(parts[1]))
+    cycles = []
+    for instruction in instructions:
+        cmd, *add = instruction.split()
+        cycles.append(0)
+        if add:
+            cycles.append(int(*add))
 
+    screen = []
     x_register = 1
     signal_strengths = 0
-    screen = []
+    for i, cycle in enumerate(cycles):
+        screen.append('■' if x_register - 1 <= i % 40 <= x_register + 1 else ' ')
 
-    for i in range(len(cycle_list)):
-        if x_register - 1 <= i % 40 <= x_register + 1:
-            screen.append("#")
-        else:
-            screen.append(" ")
+        x_register += cycle
+        if (i + 1) % 40 == 20:
+            signal_strengths += x_register * (i + 1)
 
-        cycle = i + 1
-        x_register += cycle_list[i]
-        if cycle == 20 or cycle == 60 or cycle == 100 or cycle == 140 or cycle == 180 or cycle == 220:
-            signal_strengths += x_register * cycle
-
-    print("Part 1: " + str(signal_strengths))
-    print("Part 2: ")
+    print("Part 1:", signal_strengths)
+    print("Part 2:")
     for i in range(0, len(screen), 40):
         print("".join(screen[i:i + 40]))
