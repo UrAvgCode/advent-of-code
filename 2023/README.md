@@ -1,6 +1,6 @@
 # 🎄 Advent of Code 2023 🎄
 
-### Collected Stars 32/50 ⭐
+### Collected Stars 36/50 ⭐
 
 | Day                                             | Status |
 |-------------------------------------------------|--------|
@@ -20,3 +20,5 @@
 | [Day 14: Parabolic Reflector Dish](day_14)      | ⭐ ⭐    |
 | [Day 15: Lens Library](day_15)                  | ⭐ ⭐    |
 | [Day 16: The Floor Will Be Lava](day_16)        | ⭐ ⭐    |
+| [Day 17: Clumsy Crucible](day_17)               | ⭐ ⭐    |
+| [Day 18: Lavaduct Lagoon](day_18)               | ⭐ ⭐    |
