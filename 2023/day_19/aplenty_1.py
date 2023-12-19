@@ -6,25 +6,24 @@ if __name__ == '__main__':
     with open("aplenty_input") as file:
         workflows, parts = file.read().split("\n\n")
 
-    parts = [list(map(int, re.findall(r'\d+', part))) for part in parts.split("\n")]
     workflows = workflows.splitlines()
+    parts = [list(map(int, re.findall(r'\d+', part))) for part in parts.split("\n")]
 
     categories = {'x': 0, 'm': 1, 'a': 2, 's': 3}
+
     workflow_dict = {}
     for workflow in workflows:
-        name, works = workflow.replace("}", "").split("{")
-        works = works.split(",")
+        name, works = workflow.replace('}', '').split('{')
+        works = works.split(',')
 
         workflow_dict[name] = []
         for work in works:
-            splits = work.split(":")
-            if len(splits) == 2:
-                category = categories[splits[0][0]]
-                comparison = splits[0][1]
-                amount = int(splits[0][2:])
-                workflow_dict[name].append((category, comparison, amount, splits[1]))
+            if ':' in work:
+                rule, destination = work.split(':')
+                category, comparison, operand = categories[rule[0]], rule[1], int(rule[2:])
+                workflow_dict[name].append((category, comparison, operand, destination))
             else:
-                workflow_dict[name].append(splits)
+                workflow_dict[name].append([work])
 
     accepted_list = []
     for part in parts:

@@ -1,15 +1,13 @@
-# --- Day 19: --- Part Two ---
+# --- Day 19: Aplenty --- Part Two ---
 
-import re
 from collections import deque
-
-categories = {'x': 0, 'm': 1, 'a': 2, 's': 3}
 
 if __name__ == '__main__':
     with open('aplenty_input') as file:
-        workflows, parts = file.read().split("\n\n")
+        workflows = file.read().split("\n\n")[0].splitlines()
 
-    workflows = workflows.splitlines()
+    categories = {'x': 0, 'm': 1, 'a': 2, 's': 3}
+
     workflow_dict = {}
     for workflow in workflows:
         name, works = workflow.replace('}', '').split('{')
@@ -17,65 +15,55 @@ if __name__ == '__main__':
 
         workflow_dict[name] = []
         for work in works:
-            splits = work.split(':')
-            if len(splits) == 2:
-                category = categories[splits[0][0]]
-                comparison = splits[0][1]
-                amount = int(splits[0][2:])
-                workflow_dict[name].append((category, comparison, amount, splits[1]))
+            if ':' in work:
+                rule, destination = work.split(':')
+                category, comparison, operand = categories[rule[0]], rule[1], int(rule[2:])
+                workflow_dict[name].append((category, comparison, operand, destination))
             else:
-                workflow_dict[name].append(splits)
+                workflow_dict[name].append([work])
 
     accepted_list = []
     part_queue = deque([['in', (1, 4001), (1, 4001), (1, 4001), (1, 4001)]])
     while part_queue:
-        current_workflow, *part = part_queue.popleft()
+        workflow, *part = part_queue.popleft()
 
-        for rule in workflow_dict[current_workflow]:
+        for rule in workflow_dict[workflow]:
             if len(rule) == 1:
-                next_workflow = rule[0]
-                if next_workflow == 'R':
-                    pass
-                elif next_workflow == 'A':
+                destination = rule[0]
+                if destination == 'A':
                     accepted_list.append(part)
-                else:
-                    part_queue.append([next_workflow, *part])
+                elif destination != 'R':
+                    part_queue.append([destination, *part])
                 break
 
-            category, comparator, amount, new_workflow = rule
-            if comparator == '>':
-                filter_start = amount + 1
+            category, operators, operand, destination = rule
+            if operators == '>':
+                filter_start = operand + 1
                 filter_end = 4001
             else:
                 filter_start = 0
-                filter_end = amount
+                filter_end = operand
 
             part_start, part_end = part[category]
-
             start = max(part_start, filter_start)
             end = min(part_end, filter_end)
 
             if start < end:
-                if new_workflow == 'R':
-                    pass
-                elif new_workflow == 'A':
-                    new_part = part.copy()
-                    new_part[category] = (start, end)
+                new_part = part.copy()
+                new_part[category] = (start, end)
+                if destination == 'A':
                     accepted_list.append(new_part)
-                else:
-                    new_part = part.copy()
-                    new_part[category] = (start, end)
-                    part_queue.append([new_workflow, *new_part])
+                elif destination != 'R':
+                    part_queue.append([destination, *new_part])
 
                 if part_start < start:
                     new_part = part.copy()
                     new_part[category] = (part_start, start)
-                    part_queue.append([current_workflow, *new_part])
+                    part_queue.append([workflow, *new_part])
                 if part_end > end:
                     new_part = part.copy()
                     new_part[category] = (end, part_end)
-                    part_queue.append([current_workflow, *new_part])
-                    pass
+                    part_queue.append([workflow, *new_part])
                 break
 
     distinct_combinations = 0
