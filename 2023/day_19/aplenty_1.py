@@ -27,7 +27,6 @@ if __name__ == '__main__':
                 workflow_dict[name].append(splits)
 
     accepted_list = []
-
     for part in parts:
         accepted = False
         current_workflow = "in"
@@ -37,34 +36,17 @@ if __name__ == '__main__':
                     next_workflow = rule[0]
                     if next_workflow == "A":
                         accepted_list.append(part)
-                        accepted = True
-                    elif next_workflow == "R":
-                        accepted = True
-                    else:
-                        current_workflow = next_workflow
+                    accepted = next_workflow in ("A", "R")
+                    current_workflow = next_workflow
                     break
 
                 category, comparison, amount, next_workflow = rule
-                if comparison == "<":
-                    if part[category] < amount:
-                        if next_workflow == "A":
-                            accepted_list.append(part)
-                            accepted = True
-                        elif next_workflow == "R":
-                            accepted = True
-                        else:
-                            current_workflow = next_workflow
-                        break
-                elif comparison == ">":
-                    if part[category] > amount:
-                        if next_workflow == "A":
-                            accepted_list.append(part)
-                            accepted = True
-                        elif next_workflow == "R":
-                            accepted = True
-                        else:
-                            current_workflow = next_workflow
-                        break
+                if comparison == "<" and part[category] < amount or comparison == ">" and part[category] > amount:
+                    if next_workflow == "A":
+                        accepted_list.append(part)
+                    accepted = next_workflow in ("A", "R")
+                    current_workflow = next_workflow
+                    break
 
     rating_numbers_sum = sum([sum(part) for part in accepted_list])
     print("Part 1:", rating_numbers_sum)
