@@ -1,6 +1,6 @@
 # 🎄 Advent of Code 2023 🎄
 
-### Collected Stars 36/50 ⭐
+### Collected Stars 39/50 ⭐
 
 | Day                                             | Status |
 |-------------------------------------------------|--------|
@@ -22,3 +22,5 @@
 | [Day 16: The Floor Will Be Lava](day_16)        | ⭐ ⭐    |
 | [Day 17: Clumsy Crucible](day_17)               | ⭐ ⭐    |
 | [Day 18: Lavaduct Lagoon](day_18)               | ⭐ ⭐    |
+| [Day 19: Aplenty](day_19)                       | ⭐ ⭐    |
+| [Day 20: Pulse Propagation](day_20)             | ⭐ ❌    |
