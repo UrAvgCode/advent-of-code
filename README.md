@@ -19,7 +19,7 @@ My solutions to the [Advent of Code](https://adventofcode.com/) puzzles in Pytho
 | Year         | Stars   |
 |--------------|---------|
 | [2022](2022) | 24/50 ⭐ |
-| [2023](2023) | 39/50 ⭐ |
+| [2023](2023) | 40/50 ⭐ |
 
 #
 
@@ -32,11 +32,11 @@ depending on the puzzle I have divided the solution for part one and two into mu
 ```tree
 AdventOfCode
 |-- year
-|   |-- day_1
+|   |-- day_01
 |   |   |-- puzzle_name.py
 |   |   |-- puzzle_name_input
 |   |
-|   |-- day_2
+|   |-- day_02
 |   |   |... 
 ...
 ```
