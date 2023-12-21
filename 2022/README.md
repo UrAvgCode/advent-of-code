@@ -4,15 +4,15 @@
 
 | Day                                       | Status |
 |-------------------------------------------|--------|
-| [Day 1: Calorie Counting](day_1)          | ⭐ ⭐    |
-| [Day 2: Rock Paper Scissors](day_2)       | ⭐ ⭐    |
-| [Day 3: Rucksack Reorganization](day_3)   | ⭐ ⭐    |
-| [Day 4: Camp Cleanup](day_4)              | ⭐ ⭐    |
-| [Day 5: Supply Stacks](day_5)             | ⭐ ⭐    |
-| [Day 6: Tuning Trouble](day_6)            | ⭐ ⭐    |
-| [Day 7: No Space Left On Device](day_7)   | ⭐ ⭐    |
-| [Day 8: Treetop Tree House](day_8)        | ⭐ ⭐    |
-| [Day 9: Rope Bridge](day_9)               | ⭐ ⭐    |
+| [Day 1: Calorie Counting](day_01)          | ⭐ ⭐    |
+| [Day 2: Rock Paper Scissors](day_02)       | ⭐ ⭐    |
+| [Day 3: Rucksack Reorganization](day_03)   | ⭐ ⭐    |
+| [Day 4: Camp Cleanup](day_04)              | ⭐ ⭐    |
+| [Day 5: Supply Stacks](day_05)             | ⭐ ⭐    |
+| [Day 6: Tuning Trouble](day_06)            | ⭐ ⭐    |
+| [Day 7: No Space Left On Device](day_07)   | ⭐ ⭐    |
+| [Day 8: Treetop Tree House](day_08)        | ⭐ ⭐    |
+| [Day 9: Rope Bridge](day_09)               | ⭐ ⭐    |
 | [Day 10: Cathode-Ray Tube](day_10)        | ⭐ ⭐    |
 | [Day 11: Monkey in the Middle](day_11)    | ⭐ ⭐    |
 | [Day 12: Hill Climbing Algorithm](day_12) | ⭐ ⭐    |
