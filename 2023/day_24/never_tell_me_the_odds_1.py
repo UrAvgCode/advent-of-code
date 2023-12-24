@@ -1,9 +1,8 @@
 # --- Day 24: Never Tell Me The Odds --- Part One ---
 
-
 def line_intersection(hailstone1, hailstone2):
     (x1, y1), (vx1, vy1) = hailstone1
-    (x3, y3), (vx2, vy2) = hailstone2
+    (x2, y2), (vx2, vy2) = hailstone2
 
     xdiff = (-vx1, -vx2)
     ydiff = (-vy1, -vy2)
@@ -19,7 +18,7 @@ def line_intersection(hailstone1, hailstone2):
     x = det(d, xdiff) / div
     y = det(d, ydiff) / div
 
-    if (x - x1) * vx1 >= 0 and (y - y1) * vy1 >= 0 and (x - x3) * vx2 >= 0 and (y - y3) * vy2 >= 0:
+    if (x - x1) * vx1 >= 0 and (y - y1) * vy1 >= 0 and (x - x2) * vx2 >= 0 and (y - y2) * vy2 >= 0:
         return x, y
     else:
         return -1, -1
