@@ -1,6 +1,6 @@
 # 🎄 Advent of Code 2023 🎄
 
-### Collected Stars 40/50 ⭐
+### Collected Stars 43/50 ⭐
 
 | Day                                              | Status |
 |--------------------------------------------------|--------|
@@ -23,5 +23,8 @@
 | [Day 17: Clumsy Crucible](day_17)                | ⭐ ⭐    |
 | [Day 18: Lavaduct Lagoon](day_18)                | ⭐ ⭐    |
 | [Day 19: Aplenty](day_19)                        | ⭐ ⭐    |
-| [Day 20: Pulse Propagation](day_20)              | ⭐ ❌    |
+| [Day 20: Pulse Propagation](day_20)              | ⭐ ⭐    |
 | [Day 21: Step Counter](day_21)                   | ⭐ ❌    |
+| [Day 22: Sand Slabs](day_22)                     | ❌ ❌    |
+| [Day 23: A Long Walk](day_23)                    | ⭐ ❌    |
+| [Day 24: Never Tell Me The Odds](day_24)         | ⭐ ❌    |
