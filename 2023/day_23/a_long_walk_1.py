@@ -9,6 +9,8 @@ if __name__ == '__main__':
 
     start_time = perf_counter()
 
+    directions = {'>': [(1, 0)], '<': [(-1, 0)], '^': [(0, -1)], 'v': [(0, 1)], '.': [(1, 0), (-1, 0), (0, 1), (0, -1)]}
+
     map_height = len(hiking_trails)
     map_width = len(hiking_trails[0])
     goal = (map_width - 2, map_height - 1)
@@ -27,21 +29,7 @@ if __name__ == '__main__':
 
         visited.add((x, y))
 
-        match hiking_trails[y][x]:
-            case '#':
-                continue
-            case '>':
-                directions = [(1, 0)]
-            case '<':
-                directions = [(-1, 0)]
-            case '^':
-                directions = [(0, -1)]
-            case 'v':
-                directions = [(0, 1)]
-            case _:
-                directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]
-
-        for dx, dy in directions:
+        for dx, dy in directions[hiking_trails[y][x]]:
             new_x, new_y = x + dx, y + dy
             if 0 <= new_y and hiking_trails[new_y][new_x] != '#':
                 move_queue.append((steps + 1, new_x, new_y, visited.copy()))
