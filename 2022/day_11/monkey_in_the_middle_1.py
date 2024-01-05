@@ -15,7 +15,6 @@ if __name__ == '__main__':
         false_monkey = int(false_monkey.split()[-1])
         monkeys.append([items, operation, test, true_monkey, false_monkey, 0])
 
-    inspected_items = 0
     for _ in range(20):
         for monkey in monkeys:
             items, operation, test, true_monkey, false_monkey, inspected = monkey

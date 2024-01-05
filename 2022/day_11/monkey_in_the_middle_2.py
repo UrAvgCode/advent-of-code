@@ -1,19 +1,21 @@
 # --- Day 11: Monkey in the Middle --- Part Two ---
 
-prime_numbers = (2, 3, 5, 7, 11, 13, 17, 19, 23)
+from time import perf_counter
+
+primes = (2, 3, 5, 7, 11, 13, 17, 19, 23)
 
 
 class Item:
     def __init__(self, value):
-        self.modulos = {prime: value % prime for prime in prime_numbers}
+        self.modulos = {prime: value % prime for prime in primes}
 
     def __add__(self, other):
-        for prime in prime_numbers:
+        for prime in primes:
             self.modulos[prime] = (self.modulos[prime] + other) % prime
         return self
 
     def __mul__(self, other):
-        for prime in prime_numbers:
+        for prime in primes:
             self.modulos[prime] = (self.modulos[prime] * other) % prime
         return self
 
@@ -21,7 +23,7 @@ class Item:
         return self.modulos[other]
 
     def __pow__(self, other):
-        for prime in prime_numbers:
+        for prime in primes:
             self.modulos[prime] = pow(self.modulos[prime], other) % prime
         return self
 
@@ -41,7 +43,6 @@ if __name__ == '__main__':
         false_monkey = int(false_monkey.split()[-1])
         monkeys.append([list(map(Item, items)), operation, test, true_monkey, false_monkey, 0])
 
-    inspected_items = 0
     for _ in range(10000):
         for monkey in monkeys:
             items, operation, test, true_monkey, false_monkey, inspected = monkey
