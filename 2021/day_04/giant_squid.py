@@ -1,8 +1,10 @@
-# --- Day 4: Giant Squid --- Part One ---
+# --- Day 4: Giant Squid ---
 
-def find_bingo(numbers, boards):
+def find_final_scores(numbers, boards):
+    final_scores = []
+
     for number in numbers:
-        for board in boards:
+        for board in reversed(boards):
             for i, row in enumerate(board):
                 for j, cell in enumerate(row):
                     if cell == number:
@@ -10,11 +12,17 @@ def find_bingo(numbers, boards):
 
             for row in board:
                 if all(cell == 'X' for cell in row):
-                    return get_board_sum(board, number)
+                    final_scores.append(get_board_sum(board, number))
+                    boards.remove(board)
+                    break
+            else:
+                for j in range(5):
+                    if all(board[i][j] == 'X' for i in range(5)):
+                        final_scores.append(get_board_sum(board, number))
+                        boards.remove(board)
+                        break
 
-            for j in range(5):
-                if all(board[i][j] == 'X' for i in range(5)):
-                    return get_board_sum(board, number)
+    return final_scores
 
 
 def get_board_sum(board, number):
@@ -32,4 +40,7 @@ if __name__ == '__main__':
     for i, board in enumerate(boards):
         boards[i] = [list(map(int, line.split())) for line in board.splitlines()]
 
-    print('Part 1:', find_bingo(numbers, boards))
+    final_scores = find_final_scores(numbers, boards)
+
+    print('Part 1:', final_scores[0])
+    print('Part 2:', final_scores[-1])
