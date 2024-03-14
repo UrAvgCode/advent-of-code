@@ -1,13 +1,15 @@
-// --- Day 5: Binary Boarding --- Part One ---
+// --- Day 5: Binary Boarding ---
 
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <unordered_set>
 
 using namespace std;
 
 int main() {
     int highestSeatID = 0;
+    unordered_set<int> seats;
 
     ifstream fileReader("2020/day_05/binary_boarding_input");
 
@@ -41,6 +43,7 @@ int main() {
         }
 
         int seatID = 8 * row + column;
+        seats.insert(seatID);
         if (seatID > highestSeatID) {
             highestSeatID = seatID;
         }
@@ -48,6 +51,14 @@ int main() {
 
     fileReader.close();
 
+    int mySeatID;
+    for(int i = 0; i < 1023; i++) {
+        if (seats.find(i) == seats.end() && seats.find(i - 1) != seats.end() && seats.find(i + 1) != seats.end()) {
+            mySeatID = i;
+        }
+    }
+
     cout << "Part 1: " << highestSeatID << "\n";
+    cout << "Part 2: " << mySeatID << "\n";
 }
 
