@@ -1,4 +1,4 @@
-// --- Day 4: Passport Processing --- Part Two ---
+// --- Day 4: Passport Processing ---
 
 #include <iostream>
 #include <fstream>
@@ -48,6 +48,7 @@ bool validatePassport(const unordered_map<string, string> &passport) {
 
 int main() {
     int validPassportCount = 0;
+    int strictValidPassportCount = 0;
 
     ifstream fileReader("2020/day_04/passport_processing_input");
 
@@ -55,8 +56,9 @@ int main() {
     unordered_map<string, string> passport;
     while (getline(fileReader, line)) {
         if (line.empty()) {
-            if (passport.size() == 7 && validatePassport(passport)) {
+            if (passport.size() == 7) {
                 validPassportCount++;
+                if(validatePassport(passport)) strictValidPassportCount++;
             }
             passport.clear();
         } else {
@@ -75,7 +77,8 @@ int main() {
         }
     }
 
-    cout << "Part 2: " << validPassportCount << "\n";
-
     fileReader.close();
+
+    cout << "Part 1: " << validPassportCount << "\n";
+    cout << "Part 2: " << strictValidPassportCount << "\n";
 }
