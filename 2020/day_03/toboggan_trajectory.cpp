@@ -1,4 +1,4 @@
-// --- Day 2: Password Philosophy --- Part Two ---
+// --- Day 2: Password Philosophy ---
 
 #include <iostream>
 #include <fstream>
@@ -50,6 +50,7 @@ int main() {
         treeProduct *= treeCount;
     }
 
+    cout << "Part 1: " << treeCounts[1] << "\n";
     cout << "Part 2: " << treeProduct << "\n";
 
     fileReader.close();
