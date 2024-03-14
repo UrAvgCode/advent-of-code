@@ -13,8 +13,8 @@ int main() {
     ifstream fileReader("2020/day_02/password_philosophy_input");
 
     while (getline(fileReader, line)) {
-        int hyphenIndex = line.find('-');
-        int spaceIndex = line.find(' ');
+        int hyphenIndex = (int) line.find('-');
+        int spaceIndex = (int) line.find(' ');
 
         int lowest = stoi(line.substr(0, hyphenIndex));
         int highest = stoi(line.substr(hyphenIndex + 1, spaceIndex - hyphenIndex));
