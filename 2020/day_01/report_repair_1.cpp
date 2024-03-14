@@ -3,27 +3,26 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <vector>
+#include <unordered_set>
 
 using namespace std;
 
 int main() {
-    vector<int> entries;
-    string entry;
+    unordered_set<int> entrySet;
+    string line;
 
     ifstream fileReader("2020/day_01/report_repair_input");
 
-    while (getline(fileReader, entry)) {
-        entries.push_back(std::stoi(entry));
+    while (getline(fileReader, line)) {
+        int entry = stoi(line);
+        int missing = 2020 - entry;
+
+        if (entrySet.find(missing) != entrySet.end()) {
+            cout << "Part 1: " << entry * missing << "\n";
+        } else {
+            entrySet.insert(entry);
+        }
     }
 
     fileReader.close();
-
-    for (int i = 0; i < entries.size(); i++) {
-        for (int j = i + 1; j < entries.size(); j++) {
-            if (entries[i] + entries[j] == 2020) {
-                cout << "Part 1: " << entries[i] * entries[j] << "\n";
-            }
-        }
-    }
 }
