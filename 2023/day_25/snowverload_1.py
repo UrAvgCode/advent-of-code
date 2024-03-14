@@ -34,13 +34,11 @@ if __name__ == '__main__':
     while True:
         for edge in edges:
             if not group:
-                group.add(edge[0])
-                group.add(edge[1])
+                group.update(edge)
                 edges.remove(edge)
                 break
             elif edge[0] in group or edge[1] in group:
-                group.add(edge[0])
-                group.add(edge[1])
+                group.update(edge)
                 edges.remove(edge)
                 break
         else:
