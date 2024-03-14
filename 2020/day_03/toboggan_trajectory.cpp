@@ -1,4 +1,4 @@
-// --- Day 2: Password Philosophy ---
+// --- Day 3: Toboggan Trajectory ---
 
 #include <iostream>
 #include <fstream>
