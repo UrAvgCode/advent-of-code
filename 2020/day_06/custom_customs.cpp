@@ -1,4 +1,4 @@
-// --- Day 6: Custom Customs --- Part Two ---
+// --- Day 6: Custom Customs ---
 
 #include <iostream>
 #include <fstream>
@@ -8,17 +8,18 @@
 using namespace std;
 
 int countQuestions(unordered_map<char, int> &questions, int groupSize) {
-    int sumOfCounts = 0;
-    for (auto [key, count]: questions) {
-        if (count == groupSize) {
-            sumOfCounts++;
+    int count = 0;
+    for (const auto &question: questions) {
+        if (question.second == groupSize) {
+            count++;
         }
     }
-    return sumOfCounts;
+    return count;
 }
 
 int main() {
-    int sumOfCounts = 0;
+    int sumOfCountsOne = 0;
+    int sumOfCountsTwo = 0;
     int groupSize = 0;
     unordered_map<char, int> questions;
 
@@ -27,7 +28,8 @@ int main() {
     string line;
     while (getline(fileReader, line)) {
         if (line.empty()) {
-            sumOfCounts += countQuestions(questions, groupSize);
+            sumOfCountsOne += (int) questions.size();
+            sumOfCountsTwo += countQuestions(questions, groupSize);
             groupSize = 0;
             questions.clear();
         } else {
@@ -38,10 +40,14 @@ int main() {
         }
     }
 
-    sumOfCounts += countQuestions(questions, groupSize);
+    sumOfCountsOne += (int) questions.size();
+    sumOfCountsTwo += countQuestions(questions, groupSize);
 
     fileReader.close();
 
-    cout << "Part 2: " << sumOfCounts << "\n";
+    cout << "Part 1: " << sumOfCountsOne << endl;
+    cout << "Part 2: " << sumOfCountsTwo << endl;
+
+    return 0;
 }
 
