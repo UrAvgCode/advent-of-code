@@ -7,6 +7,16 @@
 
 using namespace std;
 
+int countQuestions(unordered_map<char, int> &questions, int groupSize) {
+    int sumOfCounts = 0;
+    for (auto [key, count]: questions) {
+        if (count == groupSize) {
+            sumOfCounts++;
+        }
+    }
+    return sumOfCounts;
+}
+
 int main() {
     int sumOfCounts = 0;
     int groupSize = 0;
@@ -17,31 +27,18 @@ int main() {
     string line;
     while (getline(fileReader, line)) {
         if (line.empty()) {
-            for(auto [key, count]: questions) {
-                if (count == groupSize) {
-                    sumOfCounts += 1;
-                }
-            }
-
+            sumOfCounts += countQuestions(questions, groupSize);
             groupSize = 0;
             questions.clear();
         } else {
             groupSize += 1;
             for (char c: line) {
-                if(questions.find(c) == questions.end()) {
-                    questions[c] = 1;
-                } else {
-                    questions[c] += 1;
-                }
+                questions[c]++;
             }
         }
     }
 
-    for(auto [key, count]: questions) {
-        if (count == groupSize) {
-            sumOfCounts += 1;
-        }
-    }
+    sumOfCounts += countQuestions(questions, groupSize);
 
     fileReader.close();
 
