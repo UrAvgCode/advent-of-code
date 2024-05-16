@@ -1,22 +1,15 @@
 // --- Day 12: Hot Springs ---
 
-#include <iostream>
-#include <fstream>
-#include <unordered_map>
-#include <string>
-#include <vector>
+#include "hot_springs.h"
+
 #include <chrono>
-#include <cstdint>
+#include <fstream>
+#include <iostream>
+#include <unordered_map>
 #include <sstream>
-#include <cmath>
 
-struct condition_record {
-    std::string springs;
-    std::vector<std::uint8_t> criteria;
-};
-
-std::vector<condition_record> parse_file(const std::string &filename) {
-    auto records = std::vector<condition_record>();
+std::vector<ConditionRecord> parse_file(const std::string &filename) {
+    auto records = std::vector<ConditionRecord>();
     records.reserve(1000);
 
     std::ifstream file(filename);
@@ -35,7 +28,7 @@ std::vector<condition_record> parse_file(const std::string &filename) {
                 criteria.push_back(stoi(temp));
             }
 
-            records.push_back(condition_record{springs, criteria});
+            records.push_back(ConditionRecord{springs, criteria});
         }
         file.close();
     } else {
@@ -45,16 +38,14 @@ std::vector<condition_record> parse_file(const std::string &filename) {
     return records;
 }
 
-std::unordered_map<std::string, std::uint64_t> cache(5000);
+std::unordered_map<ConditionRecord, std::uint64_t> cache(5000);
+
 std::uint64_t get_arrangements(const std::string &springs, const std::vector<std::uint8_t> &criteria, std::uint8_t size = 0) {
     if (springs.empty()) {
         return criteria.empty() || (criteria.size() == 1 && criteria[0] == size);
     }
 
-    std::string cache_key = springs + " " + std::to_string(size) + " ";
-    for (auto num: criteria) {
-        cache_key += std::to_string(num) + ",";
-    }
+    auto cache_key = ConditionRecord{springs, criteria, size};
 
     auto it = cache.find(cache_key);
     if (it != cache.end()) {
@@ -103,8 +94,6 @@ int main() {
         std::cout << "Time: " << seconds << "s" << std::endl;
     }
 
-    std::cout << std::endl;
-
     {
         auto start = std::chrono::high_resolution_clock::now();
 
@@ -126,7 +115,7 @@ int main() {
             cache.reserve(5000);
         }
 
-        std::cout << "Part 2: " << total_arrangements << std::endl;
+        std::cout << "\nPart 2: " << total_arrangements << std::endl;
 
         auto end = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
