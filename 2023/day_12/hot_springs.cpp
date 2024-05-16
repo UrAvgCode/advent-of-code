@@ -46,56 +46,43 @@ std::vector<condition_record> parse_file(const std::string &filename) {
 }
 
 std::unordered_map<std::string, std::uint64_t> cache(5000);
-std::uint64_t get_arrangements(const condition_record &record, std::uint8_t size = 0) {
-    std::uint64_t arrangements = 0;
-    auto springs = record.springs;
-    auto criteria = record.criteria;
-
+std::uint64_t get_arrangements(const std::string &springs, const std::vector<std::uint8_t> &criteria, std::uint8_t size = 0) {
     if (springs.empty()) {
-        if (criteria.empty() || (criteria.size() == 1 && criteria[0] == size)) {
-            return 1;
-        } else {
-            return 0;
+        return criteria.empty() || (criteria.size() == 1 && criteria[0] == size);
+    }
+
+    std::string cache_key = springs + " " + std::to_string(size) + " ";
+    for (auto num: criteria) {
+        cache_key += std::to_string(num) + ",";
+    }
+
+    auto it = cache.find(cache_key);
+    if (it != cache.end()) {
+        return it->second;
+    }
+
+    std::uint64_t arrangements = 0;
+    char first_char = springs[0];
+    std::string rest_springs = springs.substr(1);
+
+    if (first_char == '#' || first_char == '?') {
+        if (!criteria.empty()) {
+            arrangements += get_arrangements(rest_springs, criteria, size + 1);
         }
     }
 
-    auto lookup_string = springs;
-    for (const auto &num: criteria) {
-        lookup_string += std::to_string(num) + ",";
+    if (first_char == '.' || first_char == '?') {
+        if (size > 0 && size == criteria[0]) {
+            std::vector<std::uint8_t> new_criteria(criteria.begin() + 1, criteria.end());
+            arrangements += get_arrangements(rest_springs, new_criteria);
+        } else if (size == 0) {
+            arrangements += get_arrangements(rest_springs, criteria);
+        }
     }
 
-    lookup_string += " " + std::to_string(size);
-
-    auto it = cache.find(lookup_string);
-    if (it == cache.end()) {
-
-        auto c = springs[0];
-        if (c == '#' || c == '?') {
-            if (!criteria.empty()) {
-                arrangements += get_arrangements(condition_record{springs.substr(1), criteria}, size + 1);
-            }
-        }
-
-        if (c == '.' || c == '?') {
-            if (0 < size && size == criteria[0]) {
-                auto new_criteria = std::vector<std::uint8_t>(criteria.size() - 1);
-                for (std::uint32_t i = 1; i < criteria.size(); i++) {
-                    new_criteria[i - 1] = criteria[i];
-                }
-                arrangements += get_arrangements(condition_record{springs.substr(1), new_criteria});
-            } else if (size == 0) {
-                arrangements += get_arrangements(condition_record{springs.substr(1), criteria});
-            }
-        }
-
-        cache[lookup_string] = arrangements;
-    } else {
-        arrangements += it->second;
-    }
-
+    cache[cache_key] = arrangements;
     return arrangements;
 }
-
 
 int main() {
     auto condition_records = parse_file("2023/day_12/hot_springs_input");
@@ -105,7 +92,7 @@ int main() {
 
         std::uint64_t total_arrangements = 0;
         for (const auto &record: condition_records) {
-            total_arrangements += get_arrangements(record);
+            total_arrangements += get_arrangements(record.springs, record.criteria);
         }
 
         std::cout << "Part 1: " << total_arrangements << std::endl;
@@ -133,7 +120,7 @@ int main() {
                 springs += "?" + original_springs;
             }
 
-            total_arrangements += get_arrangements(condition_record{springs, criteria});
+            total_arrangements += get_arrangements(springs, criteria);
 
             cache.clear();
             cache.reserve(5000);
