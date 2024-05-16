@@ -5,7 +5,6 @@
 #include <numeric>
 #include <string>
 #include <vector>
-#include <tuple>
 
 struct ConditionRecord {
     std::string springs;
