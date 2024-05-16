@@ -39,7 +39,6 @@ std::vector<ConditionRecord> parse_file(const std::string &filename) {
 }
 
 std::unordered_map<ConditionRecord, std::uint64_t> cache(5000);
-
 std::uint64_t get_arrangements(const std::string &springs, const std::vector<std::uint8_t> &criteria, std::uint8_t size = 0) {
     if (springs.empty()) {
         return criteria.empty() || (criteria.size() == 1 && criteria[0] == size);
@@ -54,7 +53,7 @@ std::uint64_t get_arrangements(const std::string &springs, const std::vector<std
 
     std::uint64_t arrangements = 0;
     char first_char = springs[0];
-    std::string rest_springs = springs.substr(1);
+    auto rest_springs = springs.substr(1);
 
     if (first_char == '#' || first_char == '?') {
         if (!criteria.empty()) {
@@ -64,8 +63,7 @@ std::uint64_t get_arrangements(const std::string &springs, const std::vector<std
 
     if (first_char == '.' || first_char == '?') {
         if (size > 0 && size == criteria[0]) {
-            std::vector<std::uint8_t> new_criteria(criteria.begin() + 1, criteria.end());
-            arrangements += get_arrangements(rest_springs, new_criteria);
+            arrangements += get_arrangements(rest_springs, {criteria.begin() + 1, criteria.end()});
         } else if (size == 0) {
             arrangements += get_arrangements(rest_springs, criteria);
         }
