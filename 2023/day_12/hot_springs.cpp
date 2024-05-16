@@ -45,8 +45,8 @@ std::vector<condition_record> parse_file(const std::string &filename) {
     return records;
 }
 
-std::unordered_map<std::string, std::uint64_t> cache;
-std::uint64_t get_arrangements(condition_record record, std::uint8_t size = 0) {
+std::unordered_map<std::string, std::uint64_t> cache(5000);
+std::uint64_t get_arrangements(const condition_record &record, std::uint8_t size = 0) {
     std::uint64_t arrangements = 0;
     auto springs = record.springs;
     auto criteria = record.criteria;
@@ -98,19 +98,52 @@ std::uint64_t get_arrangements(condition_record record, std::uint8_t size = 0) {
 
 
 int main() {
-    auto start = std::chrono::high_resolution_clock::now();
-
     auto condition_records = parse_file("2023/day_12/hot_springs_input");
 
-    std::uint64_t total_arrangements = 0;
-    for (const auto &record: condition_records) {
-        total_arrangements += get_arrangements(record);
+    {
+        auto start = std::chrono::high_resolution_clock::now();
+
+        std::uint64_t total_arrangements = 0;
+        for (const auto &record: condition_records) {
+            total_arrangements += get_arrangements(record);
+        }
+
+        std::cout << "Part 1: " << total_arrangements << std::endl;
+
+        auto end = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
+        auto seconds = static_cast<std::double_t>(duration.count()) / 1'000'000'000.0;
+        std::cout << "Time: " << seconds << "s" << std::endl;
     }
 
-    std::cout << "Part 1: " << total_arrangements << std::endl;
+    std::cout << std::endl;
 
-    auto end = std::chrono::high_resolution_clock::now();
-    auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
-    auto seconds = static_cast<std::double_t>(duration.count()) / 1'000'000'000.0;
-    std::cout << "Time: " << seconds << "s" << std::endl;
+    {
+        auto start = std::chrono::high_resolution_clock::now();
+
+        std::uint64_t total_arrangements = 0;
+        for (const auto &record: condition_records) {
+            auto springs = record.springs;
+            auto criteria = record.criteria;
+
+            auto criteria_size = static_cast<std::uint32_t>(criteria.size());
+            auto original_springs = springs;
+            for (int i = 0; i < 4; i++) {
+                criteria.insert(criteria.end(), criteria.begin(), criteria.begin() + criteria_size);
+                springs += "?" + original_springs;
+            }
+
+            total_arrangements += get_arrangements(condition_record{springs, criteria});
+
+            cache.clear();
+            cache.reserve(5000);
+        }
+
+        std::cout << "Part 2: " << total_arrangements << std::endl;
+
+        auto end = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
+        auto seconds = static_cast<std::double_t>(duration.count()) / 1'000'000'000.0;
+        std::cout << "Time: " << seconds << "s" << std::endl;
+    }
 }
