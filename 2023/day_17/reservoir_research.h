@@ -7,12 +7,7 @@
 #include <cstdint>
 
 struct Crucible {
-    int x;
-    int y;
-    int x_dir;
-    int y_dir;
-    int speed;
-    int heat_loss;
+    int x, y, x_dir, y_dir, speed, heat_loss;
 
     bool operator==(const Crucible &other) const {
         return x == other.x && y == other.y && x_dir == other.x_dir && y_dir == other.y_dir && speed == other.speed;

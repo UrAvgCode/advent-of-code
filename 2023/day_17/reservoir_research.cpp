@@ -86,7 +86,6 @@ int get_minimum_heat_loss(const std::vector<std::uint8_t> &heat_map, int width,
                 crucible_queue.push({new_x, new_y, x_dir, y_dir, speed + 1, heat_loss + additional_heat_loss});
             }
         }
-
     }
 
     return -1;
@@ -96,8 +95,27 @@ int main() {
     auto filename = "2023/day_17/reservoir_research_input";
     auto [heat_map, width] = parse_file(filename);
 
-    std::cout << "Part 1: " << get_minimum_heat_loss(heat_map, width) << std::endl;
-    std::cout << "Part 2: " << get_minimum_heat_loss(heat_map, width, 4, 10) << std::endl;
+    {
+        auto start = std::chrono::high_resolution_clock::now();
+
+        std::cout << "Part 1: " << get_minimum_heat_loss(heat_map, width) << std::endl;
+
+        auto end = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
+        auto seconds = static_cast<double>(duration.count()) / 1'000'000'000.0;
+        std::cout << "Time: " << seconds << "s" << std::endl;
+    }
+
+    {
+        auto start = std::chrono::high_resolution_clock::now();
+
+        std::cout << "\nPart 2: " << get_minimum_heat_loss(heat_map, width, 4, 10) << std::endl;
+
+        auto end = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
+        auto seconds = static_cast<double>(duration.count()) / 1'000'000'000.0;
+        std::cout << "Time: " << seconds << "s" << std::endl;
+    }
 
     return 0;
 }
