@@ -166,4 +166,4 @@ cython_debug/
 .idea/**/dictionaries
 .idea/**/shelf
 
-*input
+*_input
