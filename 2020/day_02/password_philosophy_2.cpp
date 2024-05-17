@@ -10,7 +10,7 @@ int main() {
     int validPasswordCount = 0;
     string line;
 
-    ifstream fileReader("2020/day_02/password_philosophy_input");
+    ifstream fileReader("input/2020/day_02/input.txt");
 
     while (getline(fileReader, line)) {
         int hyphenIndex = (int) line.find('-');

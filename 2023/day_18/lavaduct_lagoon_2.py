@@ -5,7 +5,7 @@ from shapely.geometry import Polygon
 delta = [(1, 0), (0, -1), (-1, 0), (0, 1)]
 
 if __name__ == '__main__':
-    with open("lavaduct_lagoon_input") as file:
+    with open("../../input/2023/day_18/input.txt") as file:
         lines = file.read().splitlines()
 
     dig_plan = []

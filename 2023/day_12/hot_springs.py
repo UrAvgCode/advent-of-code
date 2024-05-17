@@ -24,7 +24,7 @@ def get_arrangements(record, criteria, size=0):
 
 
 if __name__ == '__main__':
-    with open("hot_springs_input") as file:
+    with open("../../input/2023/day_12/input.txt") as file:
         springs = [row.split() for row in file.read().split("\n")]
 
     springs_list = []

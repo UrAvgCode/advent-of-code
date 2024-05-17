@@ -3,7 +3,7 @@
 import re
 
 if __name__ == '__main__':
-    with open("aplenty_input") as file:
+    with open("../../input/2023/day_19/input.txt") as file:
         workflows, parts = file.read().split("\n\n")
 
     workflows = workflows.splitlines()

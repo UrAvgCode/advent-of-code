@@ -1,7 +1,7 @@
 # --- Day 4: Scratchcards ---
 
 if __name__ == '__main__':
-    with open("scratchcards_input") as file:
+    with open("../../input/2023/day_04/input.txt") as file:
         lines = file.read().splitlines()
 
     total_points = 0

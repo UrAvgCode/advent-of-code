@@ -4,7 +4,7 @@ import networkx as nx
 from time import perf_counter
 
 if __name__ == '__main__':
-    with open('snowverload_input') as file:
+    with open('../../input/2023/day_25/input.txt') as file:
         lines = file.read().splitlines()
 
     start_time = perf_counter()

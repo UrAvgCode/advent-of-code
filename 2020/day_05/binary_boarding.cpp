@@ -11,10 +11,9 @@ int main() {
     int highestSeatID = 0;
     unordered_set<int> seats;
 
-    ifstream fileReader("2020/day_05/binary_boarding_input");
-
     string line;
-    while (getline(fileReader, line)) {
+    ifstream file("input/2020/day_05/input.txt");
+    while (getline(file, line)) {
         int row = 0;
         int rowCount = 128;
         int column = 0;
@@ -48,8 +47,7 @@ int main() {
             highestSeatID = seatID;
         }
     }
-
-    fileReader.close();
+    file.close();
 
     int mySeatID;
     for(int i = 0; i < 1023; i++) {
@@ -59,6 +57,6 @@ int main() {
     }
 
     cout << "Part 1: " << highestSeatID << "\n";
-    cout << "Part 2: " << mySeatID << "\n";
+    cout << "Part 2: " << mySeatID << endl;
 }
 

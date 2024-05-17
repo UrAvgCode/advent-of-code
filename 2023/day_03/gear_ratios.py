@@ -1,7 +1,7 @@
 # --- Day 3: Gear Ratios ---
 
 if __name__ == "__main__":
-    with open("gear_ratios_input") as file:
+    with open("../../input/2023/day_03/input.txt") as file:
         schematic = ["." + line + "." for line in file.read().splitlines()]
 
     schematic.append("." * len(schematic[0]))

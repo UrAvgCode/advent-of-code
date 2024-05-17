@@ -29,7 +29,7 @@ def get_reflection_sum(accuracy=0):
 
 
 if __name__ == '__main__':
-    with open("point_of_incidence_input") as file:
+    with open("../../input/2023/day_13/input.txt") as file:
         patterns = [p.splitlines() for p in file.read().split("\n\n")]
 
     print("Part 1:", get_reflection_sum())

@@ -19,7 +19,7 @@ def calculate_overlaps(vents, diagonals=False):
 
 
 if __name__ == '__main__':
-    with open('hydrothermal_venture_input') as file:
+    with open('../../input/2021/day_05/input.txt') as file:
         lines = file.read().splitlines()
 
     vents = []

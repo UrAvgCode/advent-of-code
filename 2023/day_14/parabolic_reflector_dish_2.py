@@ -17,7 +17,7 @@ def spin_cycle(dish) -> tuple:
 
 
 if __name__ == '__main__':
-    with open("parabolic_reflector_dish_input") as file:
+    with open("../../input/2023/day_14/input.txt") as file:
         original_dish = tuple(zip(*file.read().splitlines()))
 
     dish_states = [original_dish]

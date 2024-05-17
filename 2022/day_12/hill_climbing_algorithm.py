@@ -36,7 +36,7 @@ def find_shortest_path(heightmap, start):
 
 
 if __name__ == '__main__':
-    with open("hill_climbing_algorithm_input") as file:
+    with open("../../input/2022/day_12/input.txt") as file:
         heightmap = file.read().splitlines()
 
     distance_from_start = float('inf')

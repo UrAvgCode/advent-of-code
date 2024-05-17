@@ -24,7 +24,7 @@ def get_calibration_values(digit_words):
 
 
 if __name__ == '__main__':
-    with open("trebuchet_input") as file:
+    with open("../../input/2023/day_01/input.txt") as file:
         lines = file.read().splitlines()
 
     digit_words = [(item, i) for i, item in enumerate("one two three four five six seven eight nine".split(), 1)]

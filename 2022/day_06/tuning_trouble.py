@@ -7,7 +7,7 @@ def find_marker(length):
 
 
 if __name__ == '__main__':
-    with open("tuning_trouble_input") as file:
+    with open("../../input/2022/day_06/input.txt") as file:
         datastream = file.read()
 
     print("Part 1:", find_marker(4))

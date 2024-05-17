@@ -8,21 +8,23 @@
 using namespace std;
 
 int main() {
-    unordered_set<int> entrySet;
+    unordered_set<int> entry_set;
+    int multiplied_entries = -1;
+
     string line;
-
-    ifstream fileReader("2020/day_01/report_repair_input");
-
-    while (getline(fileReader, line)) {
+    ifstream file("input/2020/day_01/input.txt");
+    while (getline(file, line)) {
         int entry = stoi(line);
         int missing = 2020 - entry;
 
-        if (entrySet.find(missing) != entrySet.end()) {
-            cout << "Part 1: " << entry * missing << "\n";
+        if (entry_set.find(missing) != entry_set.end()) {
+            multiplied_entries = entry * missing;
+            break;
         } else {
-            entrySet.insert(entry);
+            entry_set.insert(entry);
         }
     }
+    file.close();
 
-    fileReader.close();
+    cout << "Part 1: " << multiplied_entries << endl;
 }

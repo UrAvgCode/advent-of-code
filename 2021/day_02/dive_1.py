@@ -1,7 +1,7 @@
 # --- Day 2: Dive! --- Part One ---
 
 if __name__ == '__main__':
-    with open('dive_input') as file:
+    with open('../../input/2021/day_02/input.txt') as file:
         lines = [line.split() for line in file.read().splitlines()]
 
     depth = 0

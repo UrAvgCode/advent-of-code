@@ -74,7 +74,7 @@ std::uint64_t get_arrangements(const std::string &springs, const std::vector<std
 }
 
 int main() {
-    auto condition_records = parse_file("2023/day_12/hot_springs_input");
+    auto condition_records = parse_file("input/2023/day_10/input.txt");
 
     {
         auto start = std::chrono::high_resolution_clock::now();

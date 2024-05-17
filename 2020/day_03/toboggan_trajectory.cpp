@@ -26,7 +26,7 @@ int main() {
     vector<string> treeMap;
     string line;
 
-    ifstream fileReader("2020/day_03/toboggan_trajectory_input");
+    ifstream fileReader("input/2020/day_03/input.txt");
 
     while (getline(fileReader, line)) {
         treeMap.push_back(line);

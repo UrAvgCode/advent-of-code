@@ -8,7 +8,7 @@ def get_hash(string):
 
 
 if __name__ == '__main__':
-    with open("lens_library_input") as file:
+    with open("../../input/2023/day_15/input.txt") as file:
         lines = file.read().strip().split(',')
 
     boxes_list = [{} for _ in range(256)]

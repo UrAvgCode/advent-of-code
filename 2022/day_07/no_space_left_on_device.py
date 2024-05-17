@@ -28,7 +28,7 @@ def directory_size_list(node):
 
 
 if __name__ == '__main__':
-    with open("no_space_left_on_device_input") as file:
+    with open("../../input/2022/day_07/input.txt") as file:
         commands = file.read().splitlines()
 
     current_dir = root = Node()

@@ -3,7 +3,7 @@
 from collections import deque
 
 if __name__ == '__main__':
-    with open('aplenty_input') as file:
+    with open('../../input/2023/day_19/input.txt') as file:
         workflows = file.read().split("\n\n")[0].splitlines()
 
     categories = {'x': 0, 'm': 1, 'a': 2, 's': 3}

@@ -1,7 +1,7 @@
 # --- Day 6: Lanternfish --- Part One ---
 
 if __name__ == '__main__':
-    with open('lanternfish_input') as file:
+    with open('../../input/2021/day_06/input.txt') as file:
         fish_list = list(map(int, file.read().split(',')))
 
     for _ in range(80):

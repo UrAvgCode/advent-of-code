@@ -3,7 +3,7 @@
 import string
 
 if __name__ == '__main__':
-    with open("rucksack_reorganization_input") as file:
+    with open("../../input/2022/day_03/input.txt") as file:
         rucksacks = file.read().strip().split("\n")
 
     priorities = {item: i + 1 for i, item in enumerate(string.ascii_letters)}

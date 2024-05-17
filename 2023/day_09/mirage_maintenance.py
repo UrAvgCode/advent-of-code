@@ -1,7 +1,7 @@
 # --- Day 9: Mirage Maintenance ---
 
 if __name__ == '__main__':
-    with open("mirage_maintenance_input") as file:
+    with open("../../input/2023/day_09/input.txt") as file:
         histories = [[int(num) for num in line.split()] for line in file.read().strip().split("\n")]
 
     sum_predictions = sum_beginnings = 0

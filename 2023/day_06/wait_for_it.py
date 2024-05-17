@@ -11,7 +11,7 @@ def get_number_of_ways(time, distance):
 
 
 if __name__ == '__main__':
-    with open("wait_for_it_input") as file:
+    with open("../../input/2023/day_06/input.txt") as file:
         times, distances = file.read().splitlines()
 
     times_part_one = [int(time) for time in times.split()[1:]]

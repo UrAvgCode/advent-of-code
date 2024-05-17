@@ -47,7 +47,7 @@ def get_location_ranges(seed_ranges, categories):
 
 
 if __name__ == '__main__':
-    with open("if_you_give_a_seed_a_fertilizer_input") as file:
+    with open("../../input/2023/day_05/input.txt") as file:
         almanac = file.read().split("\n\n")
 
     seeds = list(map(int, almanac[0].split()[1:]))

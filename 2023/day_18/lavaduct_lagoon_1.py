@@ -5,7 +5,7 @@ from collections import deque
 delta = {"U": (0, 1), "D": (0, -1), "R": (1, 0), "L": (-1, 0)}
 
 if __name__ == '__main__':
-    with open("lavaduct_lagoon_input") as file:
+    with open("../../input/2023/day_18/input.txt") as file:
         lines = file.read().splitlines()
 
     dig_plan = [(direction, int(x)) for direction, x, color in (line.split() for line in lines)]

@@ -25,7 +25,7 @@ def get_distances(expansion):
 
 
 if __name__ == '__main__':
-    with open("cosmic_expansion_input") as file:
+    with open("../../input/2023/day_11/input.txt") as file:
         galaxy_map = file.read().strip().split("\n")
 
     empty_rows = []

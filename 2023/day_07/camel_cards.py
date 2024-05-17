@@ -40,7 +40,7 @@ def calculate_winnings(hands, strengths, joker=False):
 
 
 if __name__ == '__main__':
-    with open("camel_cards_input") as file:
+    with open("../../input/2023/day_07/input.txt") as file:
         lines = file.read().splitlines()
     hands = [(hand, int(bid)) for hand, bid in (line.split() for line in lines)]
 

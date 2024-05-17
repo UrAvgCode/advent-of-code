@@ -25,7 +25,7 @@ def line_intersection(hailstone1, hailstone2):
 
 
 if __name__ == '__main__':
-    with open('never_tell_me_the_odds_input') as file:
+    with open('../../input/2023/day_24/input.txt') as file:
         lines = file.read().splitlines()
 
     hailstones = []

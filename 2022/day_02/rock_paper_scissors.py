@@ -1,7 +1,7 @@
 # --- Day 2: Rock Paper Scissors ---
 
 if __name__ == '__main__':
-    with open("rock_paper_scissors_input") as file:
+    with open("../../input/2022/day_02/input.txt") as file:
         rounds = file.read().strip().split("\n")
 
     first_strategy = {"A Y": 8, "B Z": 9, "C X": 7, "A X": 4, "B Y": 5, "C Z": 6, "A Z": 3, "B X": 1, "C Y": 2}

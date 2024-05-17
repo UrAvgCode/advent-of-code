@@ -1,7 +1,7 @@
 # --- Day 14: Parabolic Reflector Dish --- Part One ---
 
 if __name__ == '__main__':
-    with open("parabolic_reflector_dish_input") as file:
+    with open("../../input/2023/day_14/input.txt") as file:
         dish = [list(line) for line in zip(*file.read().splitlines())]
 
     load_on_beams = 0

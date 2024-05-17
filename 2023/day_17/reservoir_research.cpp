@@ -92,7 +92,7 @@ int get_minimum_heat_loss(const std::vector<std::uint8_t> &heat_map, int width,
 }
 
 int main() {
-    auto filename = "2023/day_17/reservoir_research_input";
+    auto filename = "input/2023/day_17/input.txt";
     auto [heat_map, width] = parse_file(filename);
 
     {

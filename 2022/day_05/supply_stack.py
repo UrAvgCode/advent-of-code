@@ -3,7 +3,7 @@
 from collections import deque
 
 if __name__ == '__main__':
-    with open("supply_stacks_input") as file:
+    with open("../../input/2022/day_05/input.txt") as file:
         start_stacks, instructions = file.read().split("\n\n")
 
     amounts, *start_stacks = reversed(start_stacks.split("\n"))

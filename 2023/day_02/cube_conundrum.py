@@ -12,7 +12,7 @@ def get_cube_counts(games):
 
 
 if __name__ == '__main__':
-    with open("cube_conundrum_input") as file:
+    with open("../../input/2023/day_02/input.txt") as file:
         games = [game.split(": ")[1].split(', ') for game in file.read().replace(';', ',').splitlines()]
 
     cube_counts = get_cube_counts(games)

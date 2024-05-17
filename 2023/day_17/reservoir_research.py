@@ -39,7 +39,7 @@ def get_min_heat_loss(heat_map, braking_duration=0, maximum_speed=3):
 
 
 if __name__ == '__main__':
-    with open("reservoir_research_input") as file:
+    with open("../../input/2023/day_17/input.txt") as file:
         lines = file.read().splitlines()
 
     heat_map = tuple(tuple(int(char) for char in line) for line in lines)

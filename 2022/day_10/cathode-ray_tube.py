@@ -1,7 +1,7 @@
 # --- Day 10: Cathode-Ray Tube ---
 
 if __name__ == '__main__':
-    with open("cathode-ray_tube_input") as file:
+    with open("../../input/2022/day_10/input.txt") as file:
         instructions = file.read().splitlines()
 
     cycles = []

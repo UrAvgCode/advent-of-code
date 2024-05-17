@@ -39,7 +39,7 @@ def get_visible_trees(forest):
 
 
 if __name__ == '__main__':
-    with open("treetop_tree_house_input") as file:
+    with open("../../input/2022/day_08/input.txt") as file:
         forest = [list(map(int, line)) for line in file.read().splitlines()]
 
     print("Part 1:", get_visible_trees(forest))

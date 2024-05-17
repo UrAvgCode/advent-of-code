@@ -9,12 +9,11 @@ using namespace std;
 
 int main() {
     vector<int> entries;
-    string entry;
 
-    ifstream fileReader("2020/day_01/report_repair_input");
-
-    while (getline(fileReader, entry)) {
-        entries.push_back(std::stoi(entry));
+    string line;
+    ifstream fileReader("input/2020/day_01/input.txt");
+    while (getline(fileReader, line)) {
+        entries.push_back(stoi(line));
     }
 
     fileReader.close();

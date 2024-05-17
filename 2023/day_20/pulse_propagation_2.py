@@ -43,7 +43,7 @@ def get_conjunction_time(modules, name):
 
 
 if __name__ == '__main__':
-    with open('pulse_propagation_input') as file:
+    with open('../../input/2023/day_20/input.txt') as file:
         lines = file.read().splitlines()
 
     modules = {}

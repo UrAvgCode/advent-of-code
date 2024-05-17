@@ -50,7 +50,7 @@ int main() {
     int validPassportCount = 0;
     int strictValidPassportCount = 0;
 
-    ifstream fileReader("2020/day_04/passport_processing_input");
+    ifstream fileReader("input/2020/day_04/input.txt");
 
     string line;
     unordered_map<string, string> passport;

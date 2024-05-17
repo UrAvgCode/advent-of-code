@@ -39,7 +39,7 @@ def calculate_visited(knot_amount):
 
 
 if __name__ == '__main__':
-    with open("rope_bridge_input") as file:
+    with open("../../input/2022/day_09/input.txt") as file:
         motions = [(d, int(s)) for d, s in (line.split() for line in file.read().splitlines())]
 
     print("Part 1:", calculate_visited(2))

@@ -3,7 +3,7 @@
 from collections import deque
 
 if __name__ == '__main__':
-    with open('step_counter_input') as file:
+    with open('../../input/2023/day_21/input.txt') as file:
         garden_map = file.read().splitlines()
 
     start = (0, 0, 0)

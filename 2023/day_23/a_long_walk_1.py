@@ -4,7 +4,7 @@ from collections import deque
 from time import perf_counter
 
 if __name__ == '__main__':
-    with open('a_long_walk_input') as file:
+    with open('../../input/2023/day_23/input.txt') as file:
         hiking_trails = file.read().splitlines()
 
     start_time = perf_counter()

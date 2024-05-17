@@ -3,7 +3,7 @@
 from collections import Counter
 
 if __name__ == '__main__':
-    with open('binary_diagnostic_input') as file:
+    with open('../../input/2021/day_03/input.txt') as file:
         report = file.read().splitlines()
 
     oxygen_ratings = report.copy()

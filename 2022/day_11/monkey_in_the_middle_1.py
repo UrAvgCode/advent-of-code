@@ -1,7 +1,7 @@
 # --- Day 11: Monkey in the Middle --- Part One ---
 
 if __name__ == '__main__':
-    with open('monkey_in_the_middle_input') as file:
+    with open('../../input/2022/day_11/input.txt') as file:
         monkey_strings = file.read().split('\n\n')
 
     monkeys = []

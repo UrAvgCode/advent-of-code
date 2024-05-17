@@ -37,7 +37,7 @@ def get_scenic_score(forest):
 
 
 if __name__ == '__main__':
-    with open("treetop_tree_house_input") as file:
+    with open("../../input/2022/day_08/input.txt") as file:
         forest = file.read().splitlines()
 
     print("Part 2:", get_scenic_score(forest))

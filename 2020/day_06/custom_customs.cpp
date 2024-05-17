@@ -23,7 +23,7 @@ int main() {
     int groupSize = 0;
     unordered_map<char, int> questions;
 
-    ifstream fileReader("2020/day_06/custom_customs_input");
+    ifstream fileReader("input/2020/day_06/input.txt");
 
     string line;
     while (getline(fileReader, line)) {

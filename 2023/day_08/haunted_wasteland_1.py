@@ -1,7 +1,7 @@
 # --- Day 8: Haunted Wasteland --- Part One ---
 
 if __name__ == '__main__':
-    with open("haunted_wasteland_input") as file:
+    with open("../../input/2023/day_08/input.txt") as file:
         instructions, lines = file.read().strip().split("\n\n")
 
     move_map = {}

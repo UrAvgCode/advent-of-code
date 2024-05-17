@@ -49,7 +49,7 @@ def get_energized_tiles(grid, start_beam=(-1, 0, 'E')):
 
 
 if __name__ == '__main__':
-    with open("the_floor_will_be_lava_input") as file:
+    with open("../../input/2023/day_16/input.txt") as file:
         grid = file.read().splitlines()
 
     energized_list = []

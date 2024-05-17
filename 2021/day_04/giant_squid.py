@@ -33,7 +33,7 @@ def get_board_sum(board, number):
 
 
 if __name__ == '__main__':
-    with open('giant_squid_input') as file:
+    with open('../../input/2021/day_04/input.txt') as file:
         numbers, *boards = file.read().split('\n\n')
 
     numbers = tuple(map(int, numbers.split(',')))

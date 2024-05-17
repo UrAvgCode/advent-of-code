@@ -63,7 +63,7 @@ def find_loop(start, previous):
 
 
 if __name__ == '__main__':
-    with open("pipe_maze_input") as file:
+    with open("../../input/2023/day_10/input.txt") as file:
         pipe_map = file.read().strip().split("\n")
 
         for y in range(len(pipe_map)):

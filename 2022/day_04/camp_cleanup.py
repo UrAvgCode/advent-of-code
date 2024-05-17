@@ -1,7 +1,7 @@
 # --- Day 4: Camp Cleanup ---
 
 if __name__ == '__main__':
-    with open("camp_cleanup_input") as file:
+    with open("../../input/2022/day_04/input.txt") as file:
         pairs = file.read().strip().split("\n")
 
     contains = 0
