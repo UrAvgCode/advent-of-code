@@ -1,4 +1,4 @@
-// --- Day 1: Report Repair --- Part One ---
+// --- Day 1: Report Repair ---
 
 #include "benchmark.h"
 
