@@ -17,8 +17,7 @@ std::vector<std::tuple<std::string, char, int, int>> parse_file(const std::strin
         throw std::runtime_error("unable to open file: " + filename);
     }
 
-    std::string line;
-    while (getline(file, line)) {
+    for (std::string line; getline(file, line);) {
         int hyphen_index = (int) line.find('-');
         int space_index = (int) line.find(' ');
 

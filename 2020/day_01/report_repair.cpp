@@ -15,8 +15,7 @@ std::set<int> parse_file(const std::string &filename) {
         throw std::runtime_error("unable to open file: " + filename);
     }
 
-    std::string line;
-    while (getline(file, line)) {
+    for (std::string line; getline(file, line);) {
         entries.insert(std::stoi(line));
     }
 

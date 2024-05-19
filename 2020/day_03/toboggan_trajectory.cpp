@@ -17,9 +17,7 @@ std::pair<std::vector<char>, int> parse_file(const std::string &filename) {
     std::vector<char> trees;
     for (std::string line; getline(file, line);) {
         if (width == 0) width = static_cast<int>(line.size());
-        for (char c: line) {
-            trees.push_back(c);
-        }
+        trees.insert(trees.end(), line.begin(), line.end());
     }
 
     return {trees, width};
@@ -33,7 +31,6 @@ int count_trees(const std::pair<std::vector<char>, int> &tree_map, int right, in
     int height = static_cast<int>(trees.size() / width);
     for (int y = down; y < height; y += down) {
         x = (x + right) % width;
-
         if (trees[y * width + x] == '#') {
             tree_count++;
         }
