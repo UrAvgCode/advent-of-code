@@ -1,52 +1,86 @@
 // --- Day 6: Custom Customs ---
 
+#include "benchmark.h"
+
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <unordered_map>
+#include <unordered_set>
+#include <vector>
 
-using namespace std;
+std::vector<std::vector<std::string>> parse_file(const std::string &filename) {
+    std::ifstream file(filename);
+    if (!file.is_open()) {
+        throw std::runtime_error("unable to open file: " + filename);
+    }
 
-int countQuestions(unordered_map<char, int> &questions, int groupSize) {
-    int count = 0;
-    for (const auto &question: questions) {
-        if (question.second == groupSize) {
-            count++;
+    std::vector<std::string> answers;
+    std::vector<std::vector<std::string>> groups;
+    for (std::string line; getline(file, line);) {
+        if (line.empty()) {
+            groups.push_back(answers);
+            answers = {};
+        } else {
+            answers.push_back(line);
         }
     }
-    return count;
+    groups.push_back(answers);
+
+    return groups;
 }
 
-int main() {
-    int sumOfCountsOne = 0;
-    int sumOfCountsTwo = 0;
-    int groupSize = 0;
-    unordered_map<char, int> questions;
+int part_one(const std::vector<std::vector<std::string>> &groups) {
+    int sum_of_counts = 0;
 
-    ifstream fileReader("input/2020/day_06/input.txt");
+    for (const auto &answers: groups) {
+        std::unordered_set<char> answer_set;
+        for (const auto &answer: answers) {
+            answer_set.insert(answer.begin(), answer.end());
+        }
 
-    string line;
-    while (getline(fileReader, line)) {
-        if (line.empty()) {
-            sumOfCountsOne += (int) questions.size();
-            sumOfCountsTwo += countQuestions(questions, groupSize);
-            groupSize = 0;
-            questions.clear();
-        } else {
-            groupSize += 1;
-            for (char c: line) {
-                questions[c]++;
+        sum_of_counts += static_cast<int>(answer_set.size());
+    }
+
+    return sum_of_counts;
+}
+
+int part_two(const std::vector<std::vector<std::string>> &groups) {
+    int sum_of_counts = 0;
+
+    for (const auto &answers: groups) {
+        std::unordered_map<char, int> answer_map;
+        int group_size = static_cast<int>(answers.size());
+
+        for (const auto &answer: answers) {
+            for (char c: answer) {
+                answer_map[c]++;
+            }
+        }
+
+        for (const auto &[c, count]: answer_map) {
+            if (count == group_size) {
+                sum_of_counts++;
             }
         }
     }
 
-    sumOfCountsOne += (int) questions.size();
-    sumOfCountsTwo += countQuestions(questions, groupSize);
+    return sum_of_counts;
+}
 
-    fileReader.close();
+int main() {
+    std::string filename = "../../input/2020/day_06/input.txt";
+    auto groups = parse_file(filename);
 
-    cout << "Part 1: " << sumOfCountsOne << endl;
-    cout << "Part 2: " << sumOfCountsTwo << endl;
+    std::cout << "--- Day 6: Custom Customs ---" << std::endl;
+
+    auto start = benchmark::start();
+    std::cout << "\nPart 1: " << part_one(groups) << std::endl;
+    benchmark::end(start);
+
+    start = benchmark::start();
+    std::cout << "\nPart 2: " << part_two(groups) << std::endl;
+    benchmark::end(start);
 
     return 0;
 }
