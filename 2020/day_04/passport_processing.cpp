@@ -9,6 +9,7 @@
 #include <sstream>
 #include <unordered_map>
 #include <unordered_set>
+#include <vector>
 
 std::vector<std::unordered_map<std::string, std::string>> parse_file(const std::string &filename) {
     std::ifstream file(filename);
