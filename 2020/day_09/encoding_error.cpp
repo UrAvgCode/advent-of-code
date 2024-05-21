@@ -2,9 +2,9 @@
 
 #include "benchmark.h"
 
+#include <algorithm>
 #include <iostream>
 #include <fstream>
-#include <set>
 #include <string>
 #include <unordered_set>
 #include <vector>
@@ -47,8 +47,9 @@ std::uint64_t part_two(const std::vector<std::uint64_t> &numbers) {
     std::uint64_t window_sum = numbers[0];
     while (true) {
         if (window_sum == invalid_number) {
-            auto number_set = std::set<uint64_t>(numbers.begin() + start_pointer, numbers.begin() + end_pointer);
-            return *number_set.begin() + *number_set.rbegin();
+            auto min_value = *std::min_element(numbers.begin() + start_pointer, numbers.begin() + end_pointer);
+            auto max_value = *std::max_element(numbers.begin() + start_pointer, numbers.begin() + end_pointer);
+            return min_value + max_value;
         } else if (window_sum > invalid_number) {
             window_sum -= numbers[start_pointer];
             start_pointer++;
