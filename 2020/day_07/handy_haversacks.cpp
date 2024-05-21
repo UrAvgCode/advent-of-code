@@ -10,13 +10,15 @@
 #include <unordered_map>
 #include <vector>
 
-std::unordered_map<std::string, std::vector<std::pair<int, std::string>>> parse_file(const std::string &filename) {
+using BagMap = std::unordered_map<std::string, std::vector<std::pair<int, std::string>>>;
+
+BagMap parse_file(const std::string &filename) {
     std::ifstream file(filename);
     if (!file.is_open()) {
         throw std::runtime_error("unable to open file: " + filename);
     }
 
-    std::unordered_map<std::string, std::vector<std::pair<int, std::string>>> bags;
+    BagMap bag_map;
     for (std::string line; getline(file, line);) {
         std::vector<std::string> tokens;
 
@@ -39,42 +41,42 @@ std::unordered_map<std::string, std::vector<std::pair<int, std::string>>> parse_
             contains.emplace_back(amount, bag);
         }
 
-        bags[key] = contains;
+        bag_map[key] = contains;
     }
 
-    return bags;
+    return bag_map;
 }
 
-int contains_shiny_gold(const std::unordered_map<std::string, std::vector<std::pair<int, std::string>>> &bags_map,
-                        const std::string &bag) {
-    auto bag_queue = std::queue<std::string>({bag});
+bool contains_shiny_gold(const BagMap &bag_map, const std::string &initial_bag) {
+    auto bag_queue = std::queue<std::string>({initial_bag});
     while (!bag_queue.empty()) {
         auto current_bag = bag_queue.front();
         bag_queue.pop();
 
-        for (const auto &[amount, containing_bag]: bags_map.at(current_bag)) {
+        for (const auto &[_, containing_bag]: bag_map.at(current_bag)) {
             if (containing_bag == "shiny gold") {
-                return 1;
+                return true;
             } else {
                 bag_queue.push(containing_bag);
             }
         }
-
     }
 
-    return 0;
+    return false;
 }
 
-int part_one(const std::unordered_map<std::string, std::vector<std::pair<int, std::string>>> &bags_map) {
-    int count_of_shiny_gold_bags = 0;
-    for (const auto &[initial_bag, contains]: bags_map) {
-        count_of_shiny_gold_bags += contains_shiny_gold(bags_map, initial_bag);
+int part_one(const BagMap &bag_map) {
+    int count_of_bags = 0;
+    for (const auto &[initial_bag, _]: bag_map) {
+        if (contains_shiny_gold(bag_map, initial_bag)) {
+            count_of_bags++;
+        }
     }
 
-    return count_of_shiny_gold_bags;
+    return count_of_bags;
 }
 
-int part_two(const std::unordered_map<std::string, std::vector<std::pair<int, std::string>>> &bags_map) {
+int part_two(const BagMap &bag_map) {
     int count_of_bags = 0;
 
     auto bag_queue = std::queue<std::pair<int, std::string>>();
@@ -86,7 +88,7 @@ int part_two(const std::unordered_map<std::string, std::vector<std::pair<int, st
 
         count_of_bags += current_amount;
 
-        const auto &contents = bags_map.at(current_bag);
+        const auto &contents = bag_map.at(current_bag);
         for (const auto &[containing_amount, containing_bag]: contents) {
             bag_queue.emplace(containing_amount * current_amount, containing_bag);
         }
@@ -97,16 +99,16 @@ int part_two(const std::unordered_map<std::string, std::vector<std::pair<int, st
 
 int main() {
     std::string filename = "../../input/2020/day_07/input.txt";
-    auto bags = parse_file(filename);
+    auto bag_map = parse_file(filename);
 
     std::cout << "--- Day 6: Custom Customs ---" << std::endl;
 
     auto start = benchmark::start();
-    std::cout << "\nPart 1: " << part_one(bags) << std::endl;
+    std::cout << "\nPart 1: " << part_one(bag_map) << std::endl;
     benchmark::end(start);
 
     start = benchmark::start();
-    std::cout << "\nPart 2: " << part_two(bags) << std::endl;
+    std::cout << "\nPart 2: " << part_two(bag_map) << std::endl;
     benchmark::end(start);
 
     return 0;
