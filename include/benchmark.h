@@ -15,7 +15,7 @@ namespace benchmark {
         auto output = static_cast<double>(duration.count());
 
         std::string unit;
-        if (output >= 1'000'000) {
+        if (output >= 100'000'000) {
             output /= 1'000'000'000;
             unit = "s";
         } else if (output >= 1'000) {
