@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <set>
 #include <string>
 #include <unordered_set>
 #include <vector>
@@ -37,6 +38,27 @@ std::uint64_t part_one(const std::vector<std::uint64_t> &numbers) {
     return 0;
 }
 
+std::uint64_t part_two(const std::vector<std::uint64_t> &numbers) {
+    std::uint64_t invalid_number = part_one(numbers);
+
+    int start_pointer = 0;
+    int end_pointer = 0;
+
+    std::uint64_t window_sum = numbers[0];
+    while (true) {
+        if (window_sum == invalid_number) {
+            auto number_set = std::set<uint64_t>(numbers.begin() + start_pointer, numbers.begin() + end_pointer);
+            return *number_set.begin() + *number_set.rbegin();
+        } else if (window_sum > invalid_number) {
+            window_sum -= numbers[start_pointer];
+            start_pointer++;
+        } else {
+            end_pointer++;
+            window_sum += numbers[end_pointer];
+        }
+    }
+}
+
 int main() {
     std::string filename = "../../input/2020/day_09/input.txt";
     auto numbers = parse_file(filename);
@@ -45,6 +67,10 @@ int main() {
 
     auto start = benchmark::start();
     std::cout << "\nPart 1: " << part_one(numbers) << std::endl;
+    benchmark::end(start);
+
+    start = benchmark::start();
+    std::cout << "\nPart 2: " << part_two(numbers) << std::endl;
     benchmark::end(start);
 
     return 0;
