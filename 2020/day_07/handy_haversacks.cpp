@@ -101,7 +101,7 @@ int main() {
     std::string filename = "../../input/2020/day_07/input.txt";
     auto bag_map = parse_file(filename);
 
-    std::cout << "--- Day 6: Custom Customs ---" << std::endl;
+    std::cout << "--- Day 7: Handy Haversacks ---" << std::endl;
 
     auto start = benchmark::start();
     std::cout << "\nPart 1: " << part_one(bag_map) << std::endl;
