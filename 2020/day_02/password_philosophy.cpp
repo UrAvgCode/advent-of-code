@@ -9,14 +9,15 @@
 #include <tuple>
 #include <vector>
 
-std::vector<std::tuple<std::string, char, int, int>> parse_file(const std::string &filename) {
-    std::vector<std::tuple<std::string, char, int, int>> passwords;
+using PasswordList = std::vector<std::tuple<std::string, char, int, int>>;
 
+PasswordList parse_file(const std::string &filename) {
     std::ifstream file(filename);
     if (!file.is_open()) {
         throw std::runtime_error("unable to open file: " + filename);
     }
 
+    PasswordList passwords;
     for (std::string line; getline(file, line);) {
         int hyphen_index = (int) line.find('-');
         int space_index = (int) line.find(' ');
@@ -33,7 +34,7 @@ std::vector<std::tuple<std::string, char, int, int>> parse_file(const std::strin
     return passwords;
 }
 
-int part_one(const std::vector<std::tuple<std::string, char, int, int>> &passwords) {
+int part_one(const PasswordList &passwords) {
     int valid_password_count = 0;
     for (const auto &[password, character, lowest, highest]: passwords) {
         int char_count = static_cast<int>(std::count(password.begin(), password.end(), character));
@@ -45,7 +46,7 @@ int part_one(const std::vector<std::tuple<std::string, char, int, int>> &passwor
     return valid_password_count;
 }
 
-int part_two(const std::vector<std::tuple<std::string, char, int, int>> &passwords) {
+int part_two(const PasswordList &passwords) {
     int valid_password_count = 0;
     for (const auto &[password, character, pos_one, pos_two]: passwords) {
         if ((password[pos_one - 1] == character) != (password[pos_two - 1] == character)) {
