@@ -1,38 +1,33 @@
 // --- Day 12: Hot Springs ---
 
 #include "hot_springs.h"
+#include "benchmark.h"
 
-#include <chrono>
 #include <fstream>
 #include <iostream>
-#include <unordered_map>
+#include <string>
 #include <sstream>
+#include <unordered_map>
 
 std::vector<ConditionRecord> parse_file(const std::string &filename) {
-    auto records = std::vector<ConditionRecord>();
-    records.reserve(1000);
-
     std::ifstream file(filename);
-    std::string line;
+    if (!file.is_open()) {
+        throw std::runtime_error("unable to open file: " + filename);
+    }
 
-    if (file.is_open()) {
-        while (std::getline(file, line)) {
-            auto index = line.find(' ');
-            auto springs = line.substr(0, index);
+    std::vector<ConditionRecord> records;
+    for (std::string line; getline(file, line);) {
+        auto index = line.find(' ');
+        auto springs = line.substr(0, index);
 
-            auto criteria = std::vector<std::uint8_t>();
-            auto stream = std::stringstream(line.substr(index + 1));
+        auto criteria = std::vector<std::uint8_t>();
+        auto stream = std::stringstream(line.substr(index + 1));
 
-            std::string temp;
-            while (getline(stream, temp, ',')) {
-                criteria.push_back(stoi(temp));
-            }
-
-            records.push_back(ConditionRecord{springs, criteria});
+        for (std::string temp; getline(stream, temp, ',');) {
+            criteria.push_back(stoi(temp));
         }
-        file.close();
-    } else {
-        std::cerr << "Unable to open file" << std::endl;
+
+        records.emplace_back(springs, criteria);
     }
 
     return records;
@@ -73,51 +68,47 @@ std::uint64_t get_arrangements(const std::string &springs, const std::vector<std
     return arrangements;
 }
 
+std::uint64_t part_one(const std::vector<ConditionRecord> &condition_records) {
+    std::uint64_t total_arrangements = 0;
+    for (const auto &record: condition_records) {
+        total_arrangements += get_arrangements(record.springs, record.criteria);
+    }
+
+    return total_arrangements;
+}
+
+std::uint64_t part_two(const std::vector<ConditionRecord> &condition_records) {
+    std::uint64_t total_arrangements = 0;
+    for (const auto &record: condition_records) {
+        auto springs = record.springs;
+        auto criteria = record.criteria;
+
+        auto criteria_size = static_cast<std::uint32_t>(criteria.size());
+        auto original_springs = springs;
+        for (int i = 0; i < 4; i++) {
+            criteria.insert(criteria.end(), criteria.begin(), criteria.begin() + criteria_size);
+            springs += "?" + original_springs;
+        }
+
+        total_arrangements += get_arrangements(springs, criteria);
+
+        cache.clear();
+        cache.reserve(5000);
+    }
+
+    return total_arrangements;
+}
+
 int main() {
-    auto condition_records = parse_file("input/2023/day_12/input.txt");
+    auto condition_records = parse_file("../../input/2023/day_12/input.txt");
 
-    {
-        auto start = std::chrono::high_resolution_clock::now();
+    std::cout << "--- Day 12: Hot Springs ---" << std::endl;
 
-        std::uint64_t total_arrangements = 0;
-        for (const auto &record: condition_records) {
-            total_arrangements += get_arrangements(record.springs, record.criteria);
-        }
+    auto start = benchmark::start();
+    std::cout << "Part 1: " << part_one(condition_records) << std::endl;
+    benchmark::end(start);
 
-        std::cout << "Part 1: " << total_arrangements << std::endl;
-
-        auto end = std::chrono::high_resolution_clock::now();
-        auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
-        auto seconds = static_cast<std::double_t>(duration.count()) / 1'000'000'000.0;
-        std::cout << "Time: " << seconds << "s" << std::endl;
-    }
-
-    {
-        auto start = std::chrono::high_resolution_clock::now();
-
-        std::uint64_t total_arrangements = 0;
-        for (const auto &record: condition_records) {
-            auto springs = record.springs;
-            auto criteria = record.criteria;
-
-            auto criteria_size = static_cast<std::uint32_t>(criteria.size());
-            auto original_springs = springs;
-            for (int i = 0; i < 4; i++) {
-                criteria.insert(criteria.end(), criteria.begin(), criteria.begin() + criteria_size);
-                springs += "?" + original_springs;
-            }
-
-            total_arrangements += get_arrangements(springs, criteria);
-
-            cache.clear();
-            cache.reserve(5000);
-        }
-
-        std::cout << "\nPart 2: " << total_arrangements << std::endl;
-
-        auto end = std::chrono::high_resolution_clock::now();
-        auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
-        auto seconds = static_cast<std::double_t>(duration.count()) / 1'000'000'000.0;
-        std::cout << "Time: " << seconds << "s" << std::endl;
-    }
+    start = benchmark::start();
+    std::cout << "\nPart 2: " << part_two(condition_records) << std::endl;
+    benchmark::end(start);
 }
