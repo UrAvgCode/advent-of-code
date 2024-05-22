@@ -8,13 +8,12 @@
 #include <set>
 
 std::set<int> parse_file(const std::string &filename) {
-    std::set<int> entries;
-
     std::ifstream file(filename);
     if (!file.is_open()) {
         throw std::runtime_error("unable to open file: " + filename);
     }
 
+    std::set<int> entries;
     for (std::string line; getline(file, line);) {
         entries.insert(std::stoi(line));
     }
