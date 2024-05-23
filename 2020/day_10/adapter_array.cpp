@@ -23,16 +23,17 @@ std::set<int> parse_file(const std::string &filename) {
 }
 
 int part_one(const std::set<int> &numbers) {
-    int one_jolt_differences = *numbers.begin();
+    int one_jolt_differences = 0;
     int three_jolt_differences = 1;
 
-    for (auto it = std::next(numbers.begin()); it != numbers.end(); it++) {
-        int jolt_difference = *it - *std::prev(it);
-        if (jolt_difference == 1) {
+    int previous_number = 0;
+    for (auto number: numbers) {
+        if (number - previous_number == 1) {
             one_jolt_differences++;
-        } else if (jolt_difference == 3) {
+        } else {
             three_jolt_differences++;
         }
+        previous_number = number;
     }
 
     return one_jolt_differences * three_jolt_differences;
@@ -40,20 +41,21 @@ int part_one(const std::set<int> &numbers) {
 
 std::uint64_t part_two(const std::set<int> &numbers) {
     std::array<int, 5> possibilities = {1, 1, 2, 4, 7};
-
     std::uint64_t arrangements = 1;
-    int consecutive_ones = *numbers.begin() == 1;
-    for (auto it = numbers.begin(); it != numbers.end(); ++it) {
-        if (*std::next(it) - *it == 1) {
+
+    int previous_number = 0;
+    int consecutive_ones = 0;
+    for (auto number: numbers) {
+        if (number - previous_number == 1) {
             consecutive_ones++;
         } else {
             arrangements *= possibilities[consecutive_ones];
             consecutive_ones = 0;
         }
+        previous_number = number;
     }
-    arrangements *= possibilities[consecutive_ones];
 
-    return arrangements;
+    return arrangements * possibilities[consecutive_ones];
 }
 
 int main() {
