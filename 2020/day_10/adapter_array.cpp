@@ -14,45 +14,45 @@ std::set<int> parse_file(const std::string &filename) {
         throw std::runtime_error("unable to open file: " + filename);
     }
 
-    std::set<int> numbers;
+    std::set<int> joltage_adapters;
     for (std::string line; getline(file, line);) {
-        numbers.insert(std::stoi(line));
+        joltage_adapters.insert(std::stoi(line));
     }
 
-    return numbers;
+    return joltage_adapters;
 }
 
-int part_one(const std::set<int> &numbers) {
+int part_one(const std::set<int> &joltage_adapters) {
     int one_jolt_differences = 0;
     int three_jolt_differences = 1;
 
-    int previous_number = 0;
-    for (auto number: numbers) {
-        if (number - previous_number == 1) {
+    int previous_joltage = 0;
+    for (auto output_joltage: joltage_adapters) {
+        if (output_joltage - previous_joltage == 1) {
             one_jolt_differences++;
         } else {
             three_jolt_differences++;
         }
-        previous_number = number;
+        previous_joltage = output_joltage;
     }
 
     return one_jolt_differences * three_jolt_differences;
 }
 
-std::uint64_t part_two(const std::set<int> &numbers) {
+std::uint64_t part_two(const std::set<int> &joltage_adapters) {
     std::array<int, 5> possibilities = {1, 1, 2, 4, 7};
     std::uint64_t arrangements = 1;
 
-    int previous_number = 0;
+    int previous_joltage = 0;
     int consecutive_ones = 0;
-    for (auto number: numbers) {
-        if (number - previous_number == 1) {
+    for (auto output_joltage: joltage_adapters) {
+        if (output_joltage - previous_joltage == 1) {
             consecutive_ones++;
         } else {
             arrangements *= possibilities[consecutive_ones];
             consecutive_ones = 0;
         }
-        previous_number = number;
+        previous_joltage = output_joltage;
     }
 
     return arrangements * possibilities[consecutive_ones];
@@ -60,16 +60,16 @@ std::uint64_t part_two(const std::set<int> &numbers) {
 
 int main() {
     std::string filename = "../../input/2020/day_10/input.txt";
-    auto numbers = parse_file(filename);
+    auto joltage_adapters = parse_file(filename);
 
     std::cout << "--- Day 10: Adapter Array ---" << std::endl;
 
     auto start = benchmark::start();
-    std::cout << "\nPart 1: " << part_one(numbers) << std::endl;
+    std::cout << "\nPart 1: " << part_one(joltage_adapters) << std::endl;
     benchmark::end(start);
 
     start = benchmark::start();
-    std::cout << "\nPart 2: " << part_two(numbers) << std::endl;
+    std::cout << "\nPart 2: " << part_two(joltage_adapters) << std::endl;
     benchmark::end(start);
 
     return 0;
