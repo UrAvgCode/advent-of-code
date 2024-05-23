@@ -1,3 +1,5 @@
+// --- Day 12: Hot Springs ---
+
 #pragma once
 
 #include <cmath>

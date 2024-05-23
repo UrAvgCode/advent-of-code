@@ -1,6 +1,6 @@
-// --- Day 17: Reservoir Research ---
+// --- Day 17: Clumsy Crucible ---
 
-#include "reservoir_research.h"
+#include "clumsy_crucible.h"
 #include "benchmark.h"
 
 #include <fstream>
@@ -92,7 +92,7 @@ int main() {
     auto filename = "../../input/2023/day_17/input.txt";
     auto [heat_map, width] = parse_file(filename);
 
-    std::cout << "--- Day 17: Reservoir Research ---" << std::endl;
+    std::cout << "--- Day 17: Clumsy Crucible ---" << std::endl;
 
     auto start = benchmark::start();
     std::cout << "\nPart 1: " << get_heat_loss(heat_map, width) << std::endl;

@@ -1,4 +1,4 @@
-# --- Day 17: Reservoir Research ---
+# --- Day 17: Clumsy Crucible ---
 
 from heapq import heappop, heappush
 from time import perf_counter

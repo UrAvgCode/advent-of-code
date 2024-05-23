@@ -105,7 +105,7 @@ int main() {
     std::cout << "--- Day 12: Hot Springs ---" << std::endl;
 
     auto start = benchmark::start();
-    std::cout << "Part 1: " << part_one(condition_records) << std::endl;
+    std::cout << "\nPart 1: " << part_one(condition_records) << std::endl;
     benchmark::end(start);
 
     start = benchmark::start();

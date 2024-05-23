@@ -1,4 +1,4 @@
-# --- Day 12: Hot Springs --- Part 2 ----
+# --- Day 12: Hot Springs ---
 
 import time
 from functools import cache
