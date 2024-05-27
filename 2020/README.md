@@ -11,3 +11,8 @@
 | [Day 5: Binary Boarding](day_05)     | ⭐ ⭐    |
 | [Day 6: Custom Customs](day_06)      | ⭐ ⭐    |
 | [Day 7: Handy Haversacks](day_07)    | ⭐ ⭐    |
+| [Day 8: Handheld Halting](day_08)    | ⭐ ⭐    |
+| [Day 9: Encoding Error](day_09)      | ⭐ ⭐    |
+| [Day 10: Adapter Array](day_10)      | ⭐ ⭐    |
+| [Day 11: Seating System](day_11)     | ⭐ ⭐    |
+| [Day 12: Rain Risk](day_12)          | ⭐ ⭐    |
