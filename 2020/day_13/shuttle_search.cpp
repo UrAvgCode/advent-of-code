@@ -46,6 +46,21 @@ int part_one(const int earliest_timestamp, const std::vector<int> &bus_ids) {
     return bus_ids[index] * wait_times[index];
 }
 
+std::uint64_t part_two(const std::vector<int> &bus_ids) {
+    std::uint64_t earliest_timestamp = 0;
+    auto step_size = static_cast<std::uint64_t>(bus_ids[0]);
+
+    for(int i = 1; i < bus_ids.size(); i++) {
+        if(bus_ids[i] == -1) continue;
+        while ((earliest_timestamp + i) % bus_ids[i] != 0) {
+            earliest_timestamp += step_size;
+        }
+        step_size *= bus_ids[i];
+    }
+
+    return earliest_timestamp;
+}
+
 int main() {
     std::string filename = "../../input/2020/day_13/input.txt";
     auto [earliest_timestamp, bus_ids] = parse_file(filename);
@@ -54,6 +69,10 @@ int main() {
 
     auto start = benchmark::start();
     std::cout << "\nPart 1: " << part_one(earliest_timestamp, bus_ids) << std::endl;
+    benchmark::end(start);
+
+    start = benchmark::start();
+    std::cout << "\nPart 2: " << part_two(bus_ids) << std::endl;
     benchmark::end(start);
 
     return 0;
