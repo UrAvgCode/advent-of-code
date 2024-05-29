@@ -38,7 +38,7 @@ int part_one(const int earliest_timestamp, const std::map<int, int> &buses) {
         wait_times[bus_id - (earliest_timestamp % bus_id)] = bus_id;
     }
 
-    auto &[wait_time, bus_id] = *std::min_element(wait_times.begin(), wait_times.end());
+    auto &[wait_time, bus_id] = *wait_times.begin();
     return wait_time * bus_id;
 }
 
