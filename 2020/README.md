@@ -17,3 +17,4 @@
 | [Day 11: Seating System](day_11/seating_system.cpp)          | ⭐ ⭐    | [![C++](https://skillicons.dev/icons?i=cpp)](day_11/seating_system.cpp)      |
 | [Day 12: Rain Risk](day_12/rain_risk.cpp)                    | ⭐ ⭐    | [![C++](https://skillicons.dev/icons?i=cpp)](day_12/rain_risk.cpp)           |
 | [Day 13: Shuttle Search](day_13/shuttle_search.cpp)          | ⭐ ⭐    | [![C++](https://skillicons.dev/icons?i=cpp)](day_13/shuttle_search.cpp)      |
+| [Day 14: Docking Data](day_14/docking_data.cpp)              | ⭐ ❌    | [![C++](https://skillicons.dev/icons?i=cpp)](day_14/docking_data.cpp)        |
