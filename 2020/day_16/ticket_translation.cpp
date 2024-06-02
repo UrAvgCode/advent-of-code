@@ -71,19 +71,13 @@ std::tuple<Rules, Ticket, std::vector<Ticket>> parse_file(const std::string &fil
 
 int part_one(const Rules &rules, const std::vector<Ticket> &tickets) {
     std::vector<int> invalid_values;
-    for (auto &ticket: tickets) {
-        for (auto &value: ticket) {
-            bool is_valid_value = false;
-
-            for (auto &[_, rule]: rules) {
-                for (auto &[start, end]: rule) {
-                    if (value >= start && value <= end) {
-                        is_valid_value = true;
-                    }
-                }
-            }
-
-            if (!is_valid_value) {
+    for (const auto &ticket: tickets) {
+        for (const auto &value: ticket) {
+            if (!std::any_of(rules.begin(), rules.end(), [&](const auto &rule) {
+                return std::any_of(rule.second.begin(), rule.second.end(), [&](const auto &range) {
+                    return value >= range[0] && value <= range[1];
+                });
+            })) {
                 invalid_values.push_back(value);
             }
         }
@@ -94,77 +88,56 @@ int part_one(const Rules &rules, const std::vector<Ticket> &tickets) {
 
 std::uint64_t part_two(const Rules &rules, const Ticket &my_ticket, const std::vector<Ticket> &tickets) {
     std::vector<Ticket> valid_tickets;
-    for (auto &ticket: tickets) {
-        bool is_valid_ticket = true;
-
-        for (auto &value: ticket) {
-            bool is_valid_value = false;
-
-            for (auto &[_, rule]: rules) {
-                for (auto &[start, end]: rule) {
-                    if (value >= start && value <= end) {
-                        is_valid_value = true;
-                    }
-                }
-            }
-
-            if (!is_valid_value) {
-                is_valid_ticket = false;
-                break;
-            }
-        }
-
-        if(is_valid_ticket) {
-            valid_tickets.push_back(ticket);
+    for (const auto &ticket: tickets) {
+        if (std::all_of(ticket.begin(), ticket.end(), [&](int value) {
+            return std::any_of(rules.begin(), rules.end(), [&](const auto &rule) {
+                return std::any_of(rule.second.begin(), rule.second.end(), [&](const auto &range) {
+                    return value >= range[0] && value <= range[1];
+                });
+            });
+        })) {
+            valid_tickets.emplace_back(ticket);
         }
     }
 
-    std::vector<std::unordered_set<std::string>> possible_orders(valid_tickets[0].size());
-    for(auto &possible_fields : possible_orders) {
-        for(auto &[field_name, _]: rules) {
+    std::vector<std::unordered_set<std::string>> correct_order(rules.size());
+    for (auto &possible_fields: correct_order) {
+        for (auto &[field_name, _]: rules) {
             possible_fields.insert(field_name);
         }
     }
 
-    for(auto &ticket: valid_tickets) {
-        for(int i = 0; i < ticket.size(); i++) {
-            auto value = ticket[i];
-            for(auto &[field_name, rule]: rules) {
-                bool is_possible_field = false;
-
-                for (auto &[start, end]: rule) {
-                    if (value >= start && value <= end) {
-                        is_possible_field = true;
-                    }
-                }
-
-                if(!is_possible_field) {
-                    possible_orders[i].erase(field_name);
+    for (const auto &ticket: valid_tickets) {
+        for (std::size_t i = 0; i < ticket.size(); i++) {
+            const auto value = ticket[i];
+            for (const auto &[field_name, rule]: rules) {
+                if (!std::any_of(rule.begin(), rule.end(), [&](const auto &range) {
+                    return value >= range[0] && value <= range[1];
+                })) {
+                    correct_order[i].erase(field_name);
                 }
             }
         }
     }
 
-    bool multiple_possibilities = true;
-    while (multiple_possibilities) {
-        multiple_possibilities = false;
-        for(auto &possible_fields : possible_orders) {
-            if(possible_fields.size() > 1) {
-                multiple_possibilities = true;
-            } else {
-                for(auto &other_fields : possible_orders) {
-                    if(other_fields != possible_fields) {
+    while (std::any_of(correct_order.begin(), correct_order.end(), [](auto &possible_fields) {
+        return possible_fields.size() > 1;
+    })) {
+        for (auto &possible_fields: correct_order) {
+            if (possible_fields.size() == 1) {
+                for (auto &other_fields: correct_order) {
+                    if (other_fields != possible_fields) {
                         other_fields.erase(*possible_fields.begin());
                     }
                 }
             }
         }
-
     }
 
     std::uint64_t result = 1;
-    for(int i = 0; i < my_ticket.size(); i++) {
-        if((*possible_orders[i].begin()).starts_with("departure")) {
+    for (std::size_t i = 0; i < my_ticket.size(); i++) {
+        auto field_name = (*correct_order[i].begin());
+        if (field_name.starts_with("departure")) {
             result *= my_ticket[i];
         }
     }
