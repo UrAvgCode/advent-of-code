@@ -26,7 +26,7 @@ std::vector<std::uint64_t> parse_file(const std::string &filename) {
 }
 
 std::uint64_t get_nth_number(const std::vector<std::uint64_t> &starting_numbers, std::size_t n) {
-    std::unordered_map<std::uint64_t, std::size_t> spoken_numbers;
+    std::unordered_map<std::uint64_t, std::size_t> spoken_numbers(n);
     for (auto i = 0; i < starting_numbers.size() - 1; i++) {
         spoken_numbers[starting_numbers[i]] = i + 1;
     }

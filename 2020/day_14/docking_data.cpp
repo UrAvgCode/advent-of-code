@@ -8,8 +8,7 @@
 #include <unordered_map>
 #include <vector>
 
-using Memory = std::unordered_map<std::uint64_t, std::uint64_t>;
-using Program = std::vector<std::pair<std::string, Memory>>;
+using Program = std::vector<std::pair<std::string, std::vector<std::array<std::uint64_t, 2>>>>;
 
 Program parse_file(const std::string &filename) {
     std::ifstream file(filename);
@@ -18,20 +17,20 @@ Program parse_file(const std::string &filename) {
     }
 
     std::string mask;
-    Memory memory;
+    std::vector<std::array<std::uint64_t, 2>> memory;
     Program initialization_program;
     for (std::string line; std::getline(file, line);) {
         if (line.substr(0, 4) == "mask") {
             if (!memory.empty()) {
                 initialization_program.emplace_back(mask, memory);
-                memory = Memory();
+                memory = std::vector<std::array<std::uint64_t, 2>>();
             }
             mask = line.substr(7);
         } else {
             auto equals_index = line.find('=');
             auto address = std::stoull(line.substr(4, equals_index - 6));
             auto value = std::stoull(line.substr(equals_index + 2));
-            memory[address] = value;
+            memory.push_back({address, value});
         }
     }
     initialization_program.emplace_back(mask, memory);
@@ -40,7 +39,7 @@ Program parse_file(const std::string &filename) {
 }
 
 std::uint64_t part_one(const Program &initialization_program) {
-    Memory computer_memory;
+    std::unordered_map<std::uint64_t, std::uint64_t> computer_memory;
     for (auto &[mask, memory]: initialization_program) {
         std::uint64_t and_mask = std::numeric_limits<std::uint64_t>::max();
         std::uint64_t or_mask = 0;
