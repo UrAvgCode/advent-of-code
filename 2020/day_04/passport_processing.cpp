@@ -5,8 +5,8 @@
 #include <algorithm>
 #include <fstream>
 #include <iostream>
-#include <string>
 #include <sstream>
+#include <string>
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
@@ -68,7 +68,7 @@ bool validate_passport(const std::unordered_map<std::string, std::string> &passp
 
     const std::unordered_set<std::string> possible_colors = {"amb", "blu", "brn", "gry", "grn", "hzl", "oth"};
     std::string eye_color = passport.at("ecl");
-    if (possible_colors.find(eye_color) == possible_colors.end()) return false;
+    if (!possible_colors.contains(eye_color)) return false;
 
     std::string passport_id = passport.at("pid");
     if (passport_id.size() != 9) return false;

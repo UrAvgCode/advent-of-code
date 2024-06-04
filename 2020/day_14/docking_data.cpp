@@ -4,6 +4,7 @@
 
 #include <fstream>
 #include <iostream>
+#include <ranges>
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -45,7 +46,7 @@ std::uint64_t part_one(const Program &initialization_program) {
         std::uint64_t or_mask = 0;
         std::uint64_t bit_mask = 1ull << 36;
 
-        for (auto bit: mask) {
+        for (const auto bit: mask) {
             bit_mask >>= 1;
             if (bit == '1') {
                 or_mask |= bit_mask;
@@ -60,7 +61,7 @@ std::uint64_t part_one(const Program &initialization_program) {
     }
 
     std::uint64_t sum_of_all_values = 0;
-    for (auto &[_, value]: computer_memory) {
+    for (const auto &value: std::views::values(computer_memory)) {
         sum_of_all_values += value;
     }
 

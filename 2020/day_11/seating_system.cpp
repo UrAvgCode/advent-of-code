@@ -59,7 +59,7 @@ int part_one(const std::vector<char> &seat_layout, int width) {
         }
 
         if (current_layout == next_layout) {
-            return static_cast<int>(std::count(current_layout.begin(), current_layout.end(), '#'));
+            return static_cast<int>(std::ranges::count(current_layout.begin(), current_layout.end(), '#'));
         } else {
             std::swap(current_layout, next_layout);
         }
@@ -106,7 +106,7 @@ int part_two(const std::vector<char> &seat_layout, int width) {
         }
 
         if (current_layout == next_layout) {
-            return static_cast<int>(std::count(current_layout.begin(), current_layout.end(), '#'));
+            return static_cast<int>(std::ranges::count(current_layout.begin(), current_layout.end(), '#'));
         } else {
             std::swap(current_layout, next_layout);
         }

@@ -5,6 +5,7 @@
 #include <fstream>
 #include <iostream>
 #include <map>
+#include <ranges>
 #include <string>
 
 std::pair<int, std::map<int, int>> parse_file(const std::string &filename) {
@@ -34,7 +35,7 @@ std::pair<int, std::map<int, int>> parse_file(const std::string &filename) {
 
 int part_one(const int earliest_timestamp, const std::map<int, int> &buses) {
     auto wait_times = std::map<int, int>();
-    for (const auto &[_, bus_id]: buses) {
+    for (const auto &bus_id: std::views::values(buses)) {
         wait_times[bus_id - (earliest_timestamp % bus_id)] = bus_id;
     }
 

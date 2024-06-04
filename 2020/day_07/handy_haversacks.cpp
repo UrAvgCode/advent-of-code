@@ -2,11 +2,12 @@
 
 #include "benchmark.h"
 
-#include <iostream>
 #include <fstream>
-#include <string>
-#include <sstream>
+#include <iostream>
 #include <queue>
+#include <ranges>
+#include <sstream>
+#include <string>
 #include <unordered_map>
 #include <vector>
 
@@ -53,7 +54,7 @@ bool contains_shiny_gold(const BagMap &bag_map, const std::string &initial_bag) 
         auto current_bag = bag_queue.front();
         bag_queue.pop();
 
-        for (const auto &[_, containing_bag]: bag_map.at(current_bag)) {
+        for (const auto &containing_bag: std::views::values(bag_map.at(current_bag))) {
             if (containing_bag == "shiny gold") {
                 return true;
             } else {
@@ -67,7 +68,7 @@ bool contains_shiny_gold(const BagMap &bag_map, const std::string &initial_bag) 
 
 int part_one(const BagMap &bag_map) {
     int count_of_bags = 0;
-    for (const auto &[initial_bag, _]: bag_map) {
+    for (const auto &initial_bag: std::views::keys(bag_map)) {
         if (contains_shiny_gold(bag_map, initial_bag)) {
             count_of_bags++;
         }
@@ -113,4 +114,3 @@ int main() {
 
     return 0;
 }
-

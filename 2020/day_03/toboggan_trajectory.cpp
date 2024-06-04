@@ -2,8 +2,8 @@
 
 #include "benchmark.h"
 
-#include <iostream>
 #include <fstream>
+#include <iostream>
 #include <string>
 #include <vector>
 
@@ -23,12 +23,12 @@ std::pair<std::vector<char>, int> parse_file(const std::string &filename) {
     return {trees, width};
 }
 
-int count_trees(const std::pair<std::vector<char>, int> &tree_map, int right, int down) {
+int count_trees(const std::pair<std::vector<char>, int> &tree_map, const int right, const int down) {
     auto [trees, width] = tree_map;
 
     int x = 0;
     int tree_count = 0;
-    int height = static_cast<int>(trees.size() / width);
+    const int height = static_cast<int>(trees.size() / width);
     for (int y = down; y < height; y += down) {
         x = (x + right) % width;
         if (trees[y * width + x] == '#') {
@@ -43,8 +43,8 @@ std::uint64_t part_two(const std::pair<std::vector<char>, int> &tree_map) {
     const std::array<std::pair<int, int>, 5> slopes = {{{1, 1}, {3, 1}, {5, 1}, {7, 1}, {1, 2}}};
 
     std::uint64_t tree_product = 1;
-    for (const auto &slope: slopes) {
-        tree_product *= static_cast<std::uint64_t>(count_trees(tree_map, slope.first, slope.second));
+    for (const auto &[right, down]: slopes) {
+        tree_product *= count_trees(tree_map, right, down);
     }
 
     return tree_product;

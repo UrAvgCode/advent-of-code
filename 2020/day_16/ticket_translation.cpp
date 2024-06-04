@@ -5,6 +5,7 @@
 #include <fstream>
 #include <iostream>
 #include <numeric>
+#include <ranges>
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
@@ -102,7 +103,7 @@ std::uint64_t part_two(const Rules &rules, const Ticket &my_ticket, const std::v
 
     std::vector<std::unordered_set<std::string>> correct_order(rules.size());
     for (auto &possible_fields: correct_order) {
-        for (auto &[field_name, _]: rules) {
+        for (const auto &field_name: std::views::keys(rules)) {
             possible_fields.insert(field_name);
         }
     }

@@ -4,8 +4,8 @@
 
 #include <fstream>
 #include <iostream>
-#include <string>
 #include <set>
+#include <string>
 
 std::set<int> parse_file(const std::string &filename) {
     std::ifstream file(filename);
@@ -21,10 +21,10 @@ std::set<int> parse_file(const std::string &filename) {
     return entries;
 }
 
-int part_one(std::set<int> entries) {
+int part_one(const std::set<int> &entries) {
     for (auto entry: entries) {
         int missing = 2020 - entry;
-        if (entries.find(missing) != entries.end()) {
+        if (entries.contains(missing)) {
             return entry * missing;
         }
     }
@@ -32,11 +32,11 @@ int part_one(std::set<int> entries) {
     return -1;
 }
 
-int part_two(std::set<int> entries) {
-    for (auto first = entries.begin(); first != entries.end(); first++) {
-        for (auto second = std::next(first); second != entries.end(); second++) {
+int part_two(const std::set<int> &entries) {
+    for (auto first = entries.begin(); first != entries.end(); ++first) {
+        for (auto second = std::next(first); second != entries.end(); ++second) {
             int missing = 2020 - *first - *second;
-            if (entries.find(missing) != entries.end()) {
+            if (entries.contains(missing)) {
                 return *first * *second * missing;
             }
         }
@@ -46,8 +46,8 @@ int part_two(std::set<int> entries) {
 }
 
 int main() {
-    std::string filename = "../../input/2020/day_01/input.txt";
-    auto entries = parse_file(filename);
+    const std::string filename = "../../input/2020/day_01/input.txt";
+    const auto entries = parse_file(filename);
 
     std::cout << "--- Day 1: Report Repair ---" << std::endl;
 

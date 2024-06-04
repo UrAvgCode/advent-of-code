@@ -2,8 +2,9 @@
 
 #include "benchmark.h"
 
-#include <iostream>
 #include <fstream>
+#include <iostream>
+#include <ranges>
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
@@ -50,7 +51,7 @@ int part_two(const std::vector<std::vector<std::string>> &groups) {
 
     for (const auto &answers: groups) {
         std::unordered_map<char, int> answer_map;
-        int group_size = static_cast<int>(answers.size());
+        auto group_size = answers.size();
 
         for (const auto &answer: answers) {
             for (char c: answer) {
@@ -58,7 +59,7 @@ int part_two(const std::vector<std::vector<std::string>> &groups) {
             }
         }
 
-        for (const auto &[c, count]: answer_map) {
+        for (const auto &count: std::views::values(answer_map)) {
             if (count == group_size) {
                 sum_of_counts++;
             }
@@ -84,4 +85,3 @@ int main() {
 
     return 0;
 }
-

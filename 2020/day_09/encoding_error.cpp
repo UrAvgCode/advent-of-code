@@ -3,8 +3,8 @@
 #include "benchmark.h"
 
 #include <algorithm>
-#include <iostream>
 #include <fstream>
+#include <iostream>
 #include <string>
 #include <unordered_set>
 #include <vector>
@@ -27,7 +27,7 @@ std::uint64_t part_one(const std::vector<std::uint64_t> &numbers) {
     for (int i = 25; i < numbers.size(); i++) {
         auto preamble = std::unordered_set<uint64_t>(numbers.begin() + i - 25, numbers.begin() + i);
         for (int j = i - 25; j < i; j++) {
-            if (preamble.find(numbers[i] - numbers[j]) != preamble.end()) {
+            if (preamble.contains(numbers[i] - numbers[j])) {
                 break;
             } else if (j == i - 1) {
                 return numbers[i];
@@ -76,4 +76,3 @@ int main() {
 
     return 0;
 }
-

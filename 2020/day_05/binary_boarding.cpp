@@ -2,10 +2,10 @@
 
 #include "benchmark.h"
 
-#include <iostream>
 #include <fstream>
-#include <string>
+#include <iostream>
 #include <set>
+#include <string>
 #include <vector>
 
 std::vector<std::array<char, 10>> parse_file(const std::string &filename) {
@@ -59,7 +59,7 @@ int part_one(const std::vector<std::array<char, 10>> &boarding_passes) {
 
 int part_two(const std::vector<std::array<char, 10>> &boarding_passes) {
     auto seat_ids = get_seat_ids(boarding_passes);
-    for (auto it = std::next(seat_ids.begin()); it != seat_ids.end(); it++) {
+    for (auto it = std::next(seat_ids.begin()); it != seat_ids.end(); ++it) {
         if (*std::prev(it) != *it - 1) {
             return *it - 1;
         }
@@ -82,4 +82,3 @@ int main() {
     std::cout << "\nPart 2: " << part_two(boarding_passes) << std::endl;
     benchmark::end(start);
 }
-

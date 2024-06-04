@@ -3,8 +3,8 @@
 #include "benchmark.h"
 
 #include <algorithm>
-#include <iostream>
 #include <fstream>
+#include <iostream>
 #include <string>
 #include <tuple>
 #include <vector>
@@ -19,8 +19,8 @@ PasswordList parse_file(const std::string &filename) {
 
     PasswordList passwords;
     for (std::string line; getline(file, line);) {
-        int hyphen_index = (int) line.find('-');
-        int space_index = (int) line.find(' ');
+        auto hyphen_index = line.find('-');
+        auto space_index = line.find(' ');
 
         int lowest = stoi(line.substr(0, hyphen_index));
         int highest = stoi(line.substr(hyphen_index + 1, space_index - hyphen_index));
@@ -37,8 +37,7 @@ PasswordList parse_file(const std::string &filename) {
 int part_one(const PasswordList &passwords) {
     int valid_password_count = 0;
     for (const auto &[password, character, lowest, highest]: passwords) {
-        int char_count = static_cast<int>(std::count(password.begin(), password.end(), character));
-
+        auto char_count = static_cast<int>(std::ranges::count(password.begin(), password.end(), character));
         if (char_count >= lowest && char_count <= highest) {
             valid_password_count++;
         }
