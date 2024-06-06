@@ -26,19 +26,19 @@ std::pair<std::vector<char>, std::size_t> parse_file(const std::string &filename
 }
 
 int part_one(const std::vector<char> &slice, std::size_t width) {
-    auto conway_cube = Cube(width, slice.size() / width, 1);
+    auto conway_cube = Hypercube<3>({width, slice.size() / width, 1});
     for (std::size_t i = 0; i < slice.size(); ++i) {
         int x = static_cast<int>(i % width);
         int y = static_cast<int>(i / width);
-        conway_cube.set(x, y, 0, slice[i]);
+        conway_cube.set({x, y, 0}, slice[i]);
     }
 
     for (std::size_t i = 0; i < 6; ++i) {
-        auto new_cube = Cube(conway_cube.width() + 2, conway_cube.height() + 2, conway_cube.depth() + 2);
+        auto new_cube = Hypercube<3>({conway_cube.size(0) + 2, conway_cube.size(1) + 2, conway_cube.size(2) + 2});
         for (std::size_t j = 0; j < new_cube.size(); ++j) {
-            int x = static_cast<int>(j % new_cube.width());
-            int y = static_cast<int>((j / new_cube.width()) % new_cube.height());
-            int z = static_cast<int>(j / (new_cube.width() * new_cube.height()));
+            int x = static_cast<int>(j % new_cube.size(0));
+            int y = static_cast<int>((j / new_cube.size(0)) % new_cube.size(1));
+            int z = static_cast<int>(j / (new_cube.size(0) * new_cube.size(1)));
 
             int neighbors = 0;
             for (std::size_t k = 0; k < 3 * 3 * 3; ++k) {
@@ -49,18 +49,18 @@ int part_one(const std::vector<char> &slice, std::size_t width) {
                     continue;
                 }
 
-                if (conway_cube.get(x + dx - 1, y + dy - 1, z + dz - 1) == '#') {
+                if (conway_cube.get({x + dx - 1, y + dy - 1, z + dz - 1}) == '#') {
                     ++neighbors;
                 }
             }
 
-            if (conway_cube.get(x - 1, y - 1, z - 1) == '#') {
+            if (conway_cube.get({x - 1, y - 1, z - 1}) == '#') {
                 if (neighbors == 2 || neighbors == 3) {
-                    new_cube.set(x, y, z, '#');
+                    new_cube.set({x, y, z}, '#');
                 }
             } else {
                 if (neighbors == 3) {
-                    new_cube.set(x, y, z, '#');
+                    new_cube.set({x, y, z}, '#');
                 }
             }
         }
@@ -79,22 +79,22 @@ int part_one(const std::vector<char> &slice, std::size_t width) {
 }
 
 int part_two(const std::vector<char> &slice, std::size_t width) {
-    auto hypercube = Hypercube(width, slice.size() / width, 1, 1);
+    auto hypercube = Hypercube<4>({width, slice.size() / width, 1, 1});
     for (std::size_t i = 0; i < slice.size(); ++i) {
         int x = static_cast<int>(i % width);
         int y = static_cast<int>(i / width);
-        hypercube.set(x, y, 0, 0, slice[i]);
+        hypercube.set({x, y, 0, 0}, slice[i]);
     }
 
     for (std::size_t i = 0; i < 6; ++i) {
-        auto new_hypercube = Hypercube(hypercube.width() + 2, hypercube.height() + 2, hypercube.depth() + 2,
-                                       hypercube.fourth_dimension() + 2);
+        auto new_hypercube = Hypercube<4>(
+                {hypercube.size(0) + 2, hypercube.size(1) + 2, hypercube.size(2) + 2, hypercube.size(3) + 2});
 
         for (std::size_t j = 0; j < new_hypercube.size(); ++j) {
-            int x = static_cast<int>(j % new_hypercube.width());
-            int y = static_cast<int>((j / new_hypercube.width()) % new_hypercube.height());
-            int z = static_cast<int>((j / (new_hypercube.width() * new_hypercube.height())) % new_hypercube.depth());
-            int w = static_cast<int>(j / (new_hypercube.width() * new_hypercube.height() * new_hypercube.depth()));
+            int x = static_cast<int>(j % new_hypercube.size(0));
+            int y = static_cast<int>((j / new_hypercube.size(0)) % new_hypercube.size(1));
+            int z = static_cast<int>((j / (new_hypercube.size(0) * new_hypercube.size(1))) % new_hypercube.size(2));
+            int w = static_cast<int>(j / (new_hypercube.size(0) * new_hypercube.size(1) * new_hypercube.size(2)));
 
             int neighbors = 0;
             for (std::size_t k = 0; k < 3 * 3 * 3 * 3; ++k) {
@@ -106,18 +106,18 @@ int part_two(const std::vector<char> &slice, std::size_t width) {
                     continue;
                 }
 
-                if (hypercube.get(x + dx - 1, y + dy - 1, z + dz - 1, w + dw - 1) == '#') {
+                if (hypercube.get({x + dx - 1, y + dy - 1, z + dz - 1, w + dw - 1}) == '#') {
                     ++neighbors;
                 }
             }
 
-            if (hypercube.get(x - 1, y - 1, z - 1, w - 1) == '#') {
+            if (hypercube.get({x - 1, y - 1, z - 1, w - 1}) == '#') {
                 if (neighbors == 2 || neighbors == 3) {
-                    new_hypercube.set(x, y, z, w, '#');
+                    new_hypercube.set({x, y, z, w}, '#');
                 }
             } else {
                 if (neighbors == 3) {
-                    new_hypercube.set(x, y, z, w, '#');
+                    new_hypercube.set({x, y, z, w}, '#');
                 }
             }
         }

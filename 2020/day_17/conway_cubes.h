@@ -2,76 +2,50 @@
 
 #pragma once
 
+#include <algorithm>
 #include <vector>
 
-class Cube {
-private:
-    std::vector<char> _data;
-    std::size_t _width;
-    std::size_t _height;
-    std::size_t _depth;
-
-public:
-    Cube(std::size_t width, std::size_t height, std::size_t depth) : _width(width), _height(height), _depth(depth) {
-        _data = std::vector<char>(width * height * depth, '.');
-    }
-
-    char get(int x, int y, int z) {
-        if (x < 0 || x >= _width || y < 0 || y >= _height || z < 0 || z >= _depth) {
-            return '.';
-        } else {
-            return _data[x + (_width * y) + (_width * _height * z)];
-        }
-    }
-
-    void set(int x, int y, int z, char value) { _data[x + (_width * y) + (_width * _height * z)] = value; }
-
-    [[nodiscard]] std::size_t width() const { return _width; }
-
-    [[nodiscard]] std::size_t height() const { return _height; }
-
-    [[nodiscard]] std::size_t depth() const { return _depth; }
-
-    [[nodiscard]] std::size_t size() const { return _data.size(); }
-
-    [[nodiscard]] std::vector<char> data() const { return _data; }
-};
-
+template<std::size_t N>
 class Hypercube {
 private:
     std::vector<char> _data;
-    std::size_t _width;
-    std::size_t _height;
-    std::size_t _depth;
-    std::size_t _fourth_dimension;
+    std::array<std::size_t, N> _dimensions;
 
 public:
-    Hypercube(std::size_t width, std::size_t height, std::size_t depth, std::size_t fourth_dimension) :
-        _width(width), _height(height), _depth(depth), _fourth_dimension(fourth_dimension) {
-        _data = std::vector<char>(width * height * depth * fourth_dimension, '.');
-    }
-
-    char get(int x, int y, int z, int w) {
-        if (x < 0 || x >= _width || y < 0 || y >= _height || z < 0 || z >= _depth || w < 0 || w >= _fourth_dimension) {
-            return '.';
-        } else {
-            return _data[x + (_width * y) + (_width * _height * z) + (_width * _height * _depth * w)];
+    explicit Hypercube(const std::array<std::size_t, N> &dimensions) : _dimensions(dimensions) {
+        std::size_t size = 1;
+        for (auto dim: _dimensions) {
+            size *= dim;
         }
+        _data = std::vector<char>(size, '.');
     }
 
-    void set(int x, int y, int z, int w, char value) {
-        _data[x + (_width * y) + (_width * _height * z) + (_width * _height * _depth * w)] = value;
+    char get(const std::array<int, N> &coords) {
+        std::size_t index = 0;
+        std::size_t stride = 1;
+        for (std::size_t i = 0; i < N; ++i) {
+            if (coords[i] < 0 || static_cast<std::size_t>(coords[i]) >= _dimensions[i]) {
+                return '.';
+            }
+            index += coords[i] * stride;
+            stride *= _dimensions[i];
+        }
+        return _data[index];
     }
 
-    [[nodiscard]] std::size_t width() const { return _width; }
-
-    [[nodiscard]] std::size_t height() const { return _height; }
-
-    [[nodiscard]] std::size_t depth() const { return _depth; }
-
-    [[nodiscard]] std::size_t fourth_dimension() const { return _fourth_dimension; }
+    void set(const std::array<int, N> &coords, char value) {
+        std::size_t index = 0;
+        std::size_t stride = 1;
+        for (std::size_t i = 0; i < N; ++i) {
+            index += coords[i] * stride;
+            stride *= _dimensions[i];
+        }
+        _data[index] = value;
+    }
 
     [[nodiscard]] std::size_t size() const { return _data.size(); }
+
+    [[nodiscard]] std::size_t size(std::size_t n) const { return _dimensions[n]; }
 
     [[nodiscard]] std::vector<char> data() const { return _data; }
 };
