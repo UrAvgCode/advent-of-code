@@ -5,7 +5,6 @@
 
 #include <fstream>
 #include <iostream>
-#include <ranges>
 #include <string>
 
 std::pair<std::vector<char>, std::size_t> parse_file(const std::string &filename) {
@@ -16,9 +15,7 @@ std::pair<std::vector<char>, std::size_t> parse_file(const std::string &filename
 
     std::size_t width = 0;
     std::vector<char> slice;
-    for (std::string line; std::getline(file, line) && !line.empty();) {
-        if (width == 0)
-            width = line.size();
+    for (std::string line; std::getline(file, line); width = line.size()) {
         slice.insert(slice.end(), line.begin(), line.end());
     }
 
@@ -26,19 +23,19 @@ std::pair<std::vector<char>, std::size_t> parse_file(const std::string &filename
 }
 
 int part_one(const std::vector<char> &slice, std::size_t width) {
-    auto conway_cube = Hypercube<3>({width, slice.size() / width, 1});
+    auto hypercube = Hypercube<3>({width, slice.size() / width, 1});
     for (std::size_t i = 0; i < slice.size(); ++i) {
         int x = static_cast<int>(i % width);
         int y = static_cast<int>(i / width);
-        conway_cube.set({x, y, 0}, slice[i]);
+        hypercube.set({x, y, 0}, slice[i] == '#');
     }
 
     for (std::size_t i = 0; i < 6; ++i) {
-        auto new_cube = Hypercube<3>({conway_cube.size(0) + 2, conway_cube.size(1) + 2, conway_cube.size(2) + 2});
-        for (std::size_t j = 0; j < new_cube.size(); ++j) {
-            int x = static_cast<int>(j % new_cube.size(0));
-            int y = static_cast<int>((j / new_cube.size(0)) % new_cube.size(1));
-            int z = static_cast<int>(j / (new_cube.size(0) * new_cube.size(1)));
+        auto next_hypercube = Hypercube<3>({hypercube.size(0) + 2, hypercube.size(1) + 2, hypercube.size(2) + 2});
+        for (std::size_t j = 0; j < next_hypercube.size(); ++j) {
+            int x = static_cast<int>(j % next_hypercube.size(0));
+            int y = static_cast<int>((j / next_hypercube.size(0)) % next_hypercube.size(1));
+            int z = static_cast<int>(j / (next_hypercube.size(0) * next_hypercube.size(1)));
 
             int neighbors = 0;
             for (std::size_t k = 0; k < 3 * 3 * 3; ++k) {
@@ -49,33 +46,31 @@ int part_one(const std::vector<char> &slice, std::size_t width) {
                     continue;
                 }
 
-                if (conway_cube.get({x + dx - 1, y + dy - 1, z + dz - 1}) == '#') {
+                if (hypercube.get({x + dx - 1, y + dy - 1, z + dz - 1})) {
                     ++neighbors;
                 }
             }
 
-            if (conway_cube.get({x - 1, y - 1, z - 1}) == '#') {
+            if (hypercube.get({x - 1, y - 1, z - 1})) {
                 if (neighbors == 2 || neighbors == 3) {
-                    new_cube.set({x, y, z}, '#');
+                    next_hypercube.set({x, y, z}, true);
                 }
             } else {
                 if (neighbors == 3) {
-                    new_cube.set({x, y, z}, '#');
+                    next_hypercube.set({x, y, z}, true);
                 }
             }
         }
 
-        conway_cube = new_cube;
+        hypercube = next_hypercube;
     }
 
-    int count = 0;
-    for (auto value: conway_cube.data()) {
-        if (value == '#') {
-            ++count;
-        }
+    int sum = 0;
+    for (bool value: hypercube.data()) {
+        sum += value;
     }
 
-    return count;
+    return sum;
 }
 
 int part_two(const std::vector<char> &slice, std::size_t width) {
@@ -83,18 +78,18 @@ int part_two(const std::vector<char> &slice, std::size_t width) {
     for (std::size_t i = 0; i < slice.size(); ++i) {
         int x = static_cast<int>(i % width);
         int y = static_cast<int>(i / width);
-        hypercube.set({x, y, 0, 0}, slice[i]);
+        hypercube.set({x, y, 0, 0}, slice[i] == '#');
     }
 
     for (std::size_t i = 0; i < 6; ++i) {
-        auto new_hypercube = Hypercube<4>(
+        auto next_hypercube = Hypercube<4>(
                 {hypercube.size(0) + 2, hypercube.size(1) + 2, hypercube.size(2) + 2, hypercube.size(3) + 2});
 
-        for (std::size_t j = 0; j < new_hypercube.size(); ++j) {
-            int x = static_cast<int>(j % new_hypercube.size(0));
-            int y = static_cast<int>((j / new_hypercube.size(0)) % new_hypercube.size(1));
-            int z = static_cast<int>((j / (new_hypercube.size(0) * new_hypercube.size(1))) % new_hypercube.size(2));
-            int w = static_cast<int>(j / (new_hypercube.size(0) * new_hypercube.size(1) * new_hypercube.size(2)));
+        for (std::size_t j = 0; j < next_hypercube.size(); ++j) {
+            int x = static_cast<int>(j % next_hypercube.size(0));
+            int y = static_cast<int>((j / next_hypercube.size(0)) % next_hypercube.size(1));
+            int z = static_cast<int>((j / (next_hypercube.size(0) * next_hypercube.size(1))) % next_hypercube.size(2));
+            int w = static_cast<int>(j / (next_hypercube.size(0) * next_hypercube.size(1) * next_hypercube.size(2)));
 
             int neighbors = 0;
             for (std::size_t k = 0; k < 3 * 3 * 3 * 3; ++k) {
@@ -106,33 +101,31 @@ int part_two(const std::vector<char> &slice, std::size_t width) {
                     continue;
                 }
 
-                if (hypercube.get({x + dx - 1, y + dy - 1, z + dz - 1, w + dw - 1}) == '#') {
+                if (hypercube.get({x + dx - 1, y + dy - 1, z + dz - 1, w + dw - 1})) {
                     ++neighbors;
                 }
             }
 
-            if (hypercube.get({x - 1, y - 1, z - 1, w - 1}) == '#') {
+            if (hypercube.get({x - 1, y - 1, z - 1, w - 1})) {
                 if (neighbors == 2 || neighbors == 3) {
-                    new_hypercube.set({x, y, z, w}, '#');
+                    next_hypercube.set({x, y, z, w}, true);
                 }
             } else {
                 if (neighbors == 3) {
-                    new_hypercube.set({x, y, z, w}, '#');
+                    next_hypercube.set({x, y, z, w}, true);
                 }
             }
         }
 
-        hypercube = new_hypercube;
+        hypercube = next_hypercube;
     }
 
-    int count = 0;
-    for (auto value: hypercube.data()) {
-        if (value == '#') {
-            ++count;
-        }
+    int sum = 0;
+    for (bool value: hypercube.data()) {
+        sum += value;
     }
 
-    return count;
+    return sum;
 }
 
 int main() {

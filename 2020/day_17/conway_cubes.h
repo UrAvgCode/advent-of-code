@@ -2,13 +2,12 @@
 
 #pragma once
 
-#include <algorithm>
 #include <vector>
 
 template<std::size_t N>
 class Hypercube {
 private:
-    std::vector<char> _data;
+    std::vector<bool> _data;
     std::array<std::size_t, N> _dimensions;
 
 public:
@@ -17,15 +16,15 @@ public:
         for (auto dim: _dimensions) {
             size *= dim;
         }
-        _data = std::vector<char>(size, '.');
+        _data = std::vector<bool>(size, false);
     }
 
-    char get(const std::array<int, N> &coords) {
+    bool get(const std::array<int, N> &coords) {
         std::size_t index = 0;
         std::size_t stride = 1;
         for (std::size_t i = 0; i < N; ++i) {
             if (coords[i] < 0 || static_cast<std::size_t>(coords[i]) >= _dimensions[i]) {
-                return '.';
+                return false;
             }
             index += coords[i] * stride;
             stride *= _dimensions[i];
@@ -33,7 +32,7 @@ public:
         return _data[index];
     }
 
-    void set(const std::array<int, N> &coords, char value) {
+    void set(const std::array<int, N> &coords, bool value) {
         std::size_t index = 0;
         std::size_t stride = 1;
         for (std::size_t i = 0; i < N; ++i) {
@@ -47,5 +46,5 @@ public:
 
     [[nodiscard]] std::size_t size(std::size_t n) const { return _dimensions[n]; }
 
-    [[nodiscard]] std::vector<char> data() const { return _data; }
+    [[nodiscard]] std::vector<bool> data() const { return _data; }
 };
