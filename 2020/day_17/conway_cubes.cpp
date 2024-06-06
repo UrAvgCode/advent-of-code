@@ -25,7 +25,7 @@ std::pair<std::vector<char>, std::size_t> parse_file(const std::string &filename
     return {slice, width};
 }
 
-std::uint32_t part_one(const std::vector<char> &slice, std::size_t width) {
+int part_one(const std::vector<char> &slice, std::size_t width) {
     auto conway_cube = Cube(width, slice.size() / width, 1);
     for (std::size_t i = 0; i < slice.size(); ++i) {
         int x = static_cast<int>(i % width);
@@ -68,8 +68,65 @@ std::uint32_t part_one(const std::vector<char> &slice, std::size_t width) {
         conway_cube = new_cube;
     }
 
-    std::uint64_t count = 0;
+    int count = 0;
     for (auto value: conway_cube.data()) {
+        if (value == '#') {
+            ++count;
+        }
+    }
+
+    return count;
+}
+
+int part_two(const std::vector<char> &slice, std::size_t width) {
+    auto hypercube = Hypercube(width, slice.size() / width, 1, 1);
+    for (std::size_t i = 0; i < slice.size(); ++i) {
+        int x = static_cast<int>(i % width);
+        int y = static_cast<int>(i / width);
+        hypercube.set(x, y, 0, 0, slice[i]);
+    }
+
+    for (std::size_t i = 0; i < 6; ++i) {
+        auto new_hypercube = Hypercube(hypercube.width() + 2, hypercube.height() + 2, hypercube.depth() + 2,
+                                       hypercube.fourth_dimension() + 2);
+
+        for (std::size_t j = 0; j < new_hypercube.size(); ++j) {
+            int x = static_cast<int>(j % new_hypercube.width());
+            int y = static_cast<int>((j / new_hypercube.width()) % new_hypercube.height());
+            int z = static_cast<int>((j / (new_hypercube.width() * new_hypercube.height())) % new_hypercube.depth());
+            int w = static_cast<int>(j / (new_hypercube.width() * new_hypercube.height() * new_hypercube.depth()));
+
+            int neighbors = 0;
+            for (std::size_t k = 0; k < 3 * 3 * 3 * 3; ++k) {
+                int dx = static_cast<int>(k % 3) - 1;
+                int dy = static_cast<int>((k / 3) % 3) - 1;
+                int dz = static_cast<int>((k / (3 * 3)) % 3) - 1;
+                int dw = static_cast<int>(k / (3 * 3 * 3)) - 1;
+                if (dx == 0 && dy == 0 && dz == 0 && dw == 0) {
+                    continue;
+                }
+
+                if (hypercube.get(x + dx - 1, y + dy - 1, z + dz - 1, w + dw - 1) == '#') {
+                    ++neighbors;
+                }
+            }
+
+            if (hypercube.get(x - 1, y - 1, z - 1, w - 1) == '#') {
+                if (neighbors == 2 || neighbors == 3) {
+                    new_hypercube.set(x, y, z, w, '#');
+                }
+            } else {
+                if (neighbors == 3) {
+                    new_hypercube.set(x, y, z, w, '#');
+                }
+            }
+        }
+
+        hypercube = new_hypercube;
+    }
+
+    int count = 0;
+    for (auto value: hypercube.data()) {
         if (value == '#') {
             ++count;
         }
@@ -86,6 +143,10 @@ int main() {
 
     auto start = benchmark::start();
     std::cout << "\nPart 1: " << part_one(slice, width) << std::endl;
+    benchmark::end(start);
+
+    start = benchmark::start();
+    std::cout << "\nPart 2: " << part_two(slice, width) << std::endl;
     benchmark::end(start);
 
     return 0;
