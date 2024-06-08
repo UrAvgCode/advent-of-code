@@ -2,9 +2,7 @@
 
 #pragma once
 
-#include <cmath>
 #include <cstdint>
-#include <numeric>
 #include <string>
 #include <vector>
 
@@ -24,11 +22,8 @@ namespace std {
         size_t operator()(const ConditionRecord &key) const {
             std::size_t h1 = std::hash<std::string>{}(key.springs);
             std::size_t h2 = std::hash<std::uint8_t>{}(key.size);
-            std::size_t h3 = 0;
-            for (auto num: key.criteria) {
-                h3 = h3 * 31 + std::hash<std::uint8_t>{}(num);
-            }
-            return h1 ^ (h2 << 1) ^ (h3 << 2);
+            std::size_t h3 = std::hash<std::string>{}({key.criteria.begin(), key.criteria.end()});
+            return h1 ^ h2 ^ h3;
         }
     };
-}
+} // namespace std
