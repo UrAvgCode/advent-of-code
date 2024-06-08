@@ -25,13 +25,12 @@ std::vector<ConditionRecord> parse_file(const std::string &filename) {
 
     std::vector<ConditionRecord> records;
     for (std::string line; getline(file, line);) {
-        auto index = line.find(' ');
-        auto springs = line.substr(0, index);
+        auto space_pos = line.find(' ');
+        auto springs = line.substr(0, space_pos);
 
         auto criteria = std::vector<std::uint8_t>();
-        auto stream = std::stringstream(line.substr(index + 1));
-
-        for (std::string temp; getline(stream, temp, ',');) {
+        auto criteria_stream = std::stringstream(line.substr(space_pos + 1));
+        for (std::string temp; getline(criteria_stream, temp, ',');) {
             criteria.push_back(stoi(temp));
         }
 
@@ -92,12 +91,11 @@ std::uint64_t part_two(const std::vector<ConditionRecord> &condition_records) {
             policy, condition_records.begin(), condition_records.end(), 0ull, std::plus<>(), [](const auto &record) {
                 auto springs = record.springs;
                 auto criteria = record.criteria;
+                auto criteria_size = criteria.size();
 
-                auto criteria_size = static_cast<std::uint32_t>(criteria.size());
-                auto original_springs = springs;
                 for (int i = 0; i < 4; i++) {
                     criteria.insert(criteria.end(), criteria.begin(), criteria.begin() + criteria_size);
-                    springs += "?" + original_springs;
+                    springs += "?" + record.springs;
                 }
 
                 return get_arrangements({springs, criteria});
@@ -105,7 +103,8 @@ std::uint64_t part_two(const std::vector<ConditionRecord> &condition_records) {
 }
 
 int main() {
-    auto condition_records = parse_file("../../input/2023/day_12/input.txt");
+    std::string filename = "../../input/2023/day_12/input.txt";
+    auto condition_records = parse_file(filename);
 
     std::cout << "--- Day 12: Hot Springs ---" << std::endl;
 
