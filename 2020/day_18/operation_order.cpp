@@ -69,6 +69,70 @@ std::uint64_t part_one(const std::vector<std::string> &expressions) {
     return sum;
 }
 
+std::uint64_t part_two(const std::vector<std::string> &expressions) {
+    std::uint64_t sum = 0;
+    for (const auto &expression: expressions) {
+        std::stack<std::uint64_t> operand_stack;
+        std::stack<char> operator_stack;
+
+        for (char token: expression) {
+            if (token == ' ') {
+                continue;
+
+            } else if (std::isdigit(token)) {
+                int operand = token - '0';
+                if (operator_stack.empty() || operator_stack.top() == '(' || operator_stack.top() == '*') {
+                    operand_stack.push(operand);
+                } else if (operator_stack.top() == '+') {
+                    operand_stack.top() += operand;
+                    operator_stack.pop();
+                }
+
+            } else if (token == '+' || token == '*' || token == '(') {
+                operator_stack.push(token);
+
+            } else if (token == ')') {
+                while (operator_stack.top() != '(') {
+                    std::uint64_t value = operand_stack.top();
+                    operand_stack.pop();
+
+                    if (operator_stack.top() == '+') {
+                        operand_stack.top() += value;
+                    } else if (operator_stack.top() == '*') {
+                        operand_stack.top() *= value;
+                    }
+                    operator_stack.pop();
+                }
+                operator_stack.pop();
+
+                if (!operator_stack.empty() && operator_stack.top() == '+') {
+                    std::uint64_t value = operand_stack.top();
+                    operand_stack.pop();
+
+                    operand_stack.top() += value;
+                    operator_stack.pop();
+                }
+            }
+        }
+
+        while (!operator_stack.empty()) {
+            std::uint64_t value = operand_stack.top();
+            operand_stack.pop();
+
+            if (operator_stack.top() == '+') {
+                operand_stack.top() += value;
+            } else if (operator_stack.top() == '*') {
+                operand_stack.top() *= value;
+            }
+            operator_stack.pop();
+        }
+
+        sum += operand_stack.top();
+    }
+
+    return sum;
+}
+
 int main() {
     std::string filename = "../../input/2020/day_18/input.txt";
     auto expressions = parse_file(filename);
@@ -77,6 +141,10 @@ int main() {
 
     auto start = benchmark::start();
     std::cout << "\nPart 1: " << part_one(expressions) << std::endl;
+    benchmark::end(start);
+
+    start = benchmark::start();
+    std::cout << "\nPart 2: " << part_two(expressions) << std::endl;
     benchmark::end(start);
 
     return 0;
