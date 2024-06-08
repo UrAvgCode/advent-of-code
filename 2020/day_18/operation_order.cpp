@@ -27,12 +27,9 @@ std::uint64_t part_one(const std::vector<std::string> &expressions) {
         std::stack<std::uint64_t> operand_stack;
         std::stack<char> operator_stack;
 
-        for (char op: expression) {
-            if (op == ' ') {
-                continue;
-
-            } else if (isdigit(op)) {
-                int operand = op - '0';
+        for (char token: expression) {
+            if (std::isdigit(token)) {
+                int operand = token - '0';
                 if (operator_stack.empty() || operator_stack.top() == '(') {
                     operand_stack.push(operand);
                     if (!operator_stack.empty()) {
@@ -46,21 +43,23 @@ std::uint64_t part_one(const std::vector<std::string> &expressions) {
                     operator_stack.pop();
                 }
 
-            } else if (op == '*' || op == '+' || op == '(') {
-                operator_stack.push(op);
+            } else if (token == '+' || token == '*' || token == '(') {
+                operator_stack.push(token);
 
-            } else if (op == ')' && !operator_stack.empty()) {
-                if (operator_stack.top() != '(') {
-                    std::uint64_t value = operand_stack.top();
-                    operand_stack.pop();
+            } else if (token == ')') {
+                if (!operator_stack.empty()) {
+                    if (operator_stack.top() != '(') {
+                        std::uint64_t value = operand_stack.top();
+                        operand_stack.pop();
 
-                    if (operator_stack.top() == '+') {
-                        operand_stack.top() += value;
-                    } else if (operator_stack.top() == '*') {
-                        operand_stack.top() *= value;
+                        if (operator_stack.top() == '+') {
+                            operand_stack.top() += value;
+                        } else if (operator_stack.top() == '*') {
+                            operand_stack.top() *= value;
+                        }
                     }
+                    operator_stack.pop();
                 }
-                operator_stack.pop();
             }
         }
 
