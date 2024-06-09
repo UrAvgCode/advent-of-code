@@ -50,7 +50,7 @@ def fetch_all_inputs():
         end_year = current_date.year - 1
         end_day = 25
 
-    start_year = 2020
+    start_year = 2015
     for year in range(start_year, end_year + 1):
         print(f'\nfetching inputs for {year}')
         for day in range(1, end_day + 1):
