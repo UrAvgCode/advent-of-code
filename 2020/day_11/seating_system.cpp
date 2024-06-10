@@ -1,45 +1,44 @@
 // --- Day 11: Seating System ---
 
-#include "benchmark.h"
+#include "solver.h"
 
 #include <algorithm>
 #include <array>
 #include <fstream>
-#include <iostream>
 #include <string>
 #include <vector>
 
-std::pair<std::vector<char>, int> parse_file(const std::string &filename) {
-    std::ifstream file(filename);
-    if (!file.is_open()) {
-        throw std::runtime_error("unable to open file: " + filename);
-    }
-
-    int width = 0;
+std::pair<std::vector<char>, std::size_t> parser(std::ifstream &file) {
+    std::size_t width = 0;
     std::vector<char> seat_layout;
-    for (std::string line; getline(file, line);) {
-        if (width == 0) width = static_cast<int>(line.size());
+    for (std::string line; getline(file, line); width = line.size()) {
         seat_layout.insert(seat_layout.end(), line.begin(), line.end());
     }
 
     return {seat_layout, width};
 }
 
-int part_one(const std::vector<char> &seat_layout, int width) {
+int part_one(const std::vector<char> &seat_layout, const std::size_t width) {
     auto current_layout = std::vector<char>(seat_layout);
-    const int height = static_cast<int>(seat_layout.size()) / width;
+    const auto height = seat_layout.size() / width;
 
     while (true) {
         auto next_layout = std::vector<char>(current_layout);
-        for (int i = 0; i < current_layout.size(); i++) {
-            if (current_layout[i] == '.') continue;
-            const int x = i % width;
-            const int y = i / width;
+        for (std::size_t i = 0; i < current_layout.size(); i++) {
+            if (current_layout[i] == '.') {
+                continue;
+            }
+
+            const int x = static_cast<int>(i % width);
+            const int y = static_cast<int>(i / width);
 
             int occupied_seats = 0;
             for (int dx = -1; dx <= 1; dx++) {
                 for (int dy = -1; dy <= 1; dy++) {
-                    if (dx == 0 && dy == 0) continue;
+                    if (dx == 0 && dy == 0) {
+                        continue;
+                    }
+
                     const int nx = x + dx;
                     const int ny = y + dy;
 
@@ -66,21 +65,27 @@ int part_one(const std::vector<char> &seat_layout, int width) {
     }
 }
 
-int part_two(const std::vector<char> &seat_layout, int width) {
+int part_two(const std::vector<char> &seat_layout, const std::size_t width) {
     auto current_layout = std::vector<char>(seat_layout);
-    const int height = static_cast<int>(seat_layout.size()) / width;
+    const auto height = seat_layout.size() / width;
 
     while (true) {
         auto next_layout = std::vector<char>(current_layout);
-        for (int i = 0; i < current_layout.size(); i++) {
-            if (current_layout[i] == '.') continue;
-            const int x = i % width;
-            const int y = i / width;
+        for (std::size_t i = 0; i < current_layout.size(); i++) {
+            if (current_layout[i] == '.') {
+                continue;
+            }
+
+            const int x = static_cast<int>(i % width);
+            const int y = static_cast<int>(i / width);
 
             int occupied_seats = 0;
             for (int dx = -1; dx <= 1; dx++) {
                 for (int dy = -1; dy <= 1; dy++) {
-                    if (dx == 0 && dy == 0) continue;
+                    if (dx == 0 && dy == 0) {
+                        continue;
+                    }
+
                     int nx = x + dx;
                     int ny = y + dy;
 
@@ -114,18 +119,11 @@ int part_two(const std::vector<char> &seat_layout, int width) {
 }
 
 int main() {
-    std::string filename = "../../input/2020/day_11/input.txt";
-    auto [seat_layout, width] = parse_file(filename);
+    Solver solver(2020, 11, "Seating System");
 
-    std::cout << "--- Day 11: Seating System ---" << std::endl;
-
-    auto start = benchmark::start();
-    std::cout << "\nPart 1: " << part_one(seat_layout, width) << std::endl;
-    benchmark::end(start);
-
-    start = benchmark::start();
-    std::cout << "\nPart 2: " << part_two(seat_layout, width) << std::endl;
-    benchmark::end(start);
+    auto [seat_layout, width] = solver.parse_file(parser);
+    solver(part_one, seat_layout, width);
+    solver(part_two, seat_layout, width);
 
     return 0;
 }

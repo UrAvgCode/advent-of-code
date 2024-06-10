@@ -1,19 +1,13 @@
 // --- Day 13: Shuttle Search ---
 
-#include "benchmark.h"
+#include "solver.h"
 
 #include <fstream>
-#include <iostream>
 #include <map>
 #include <ranges>
 #include <string>
 
-std::pair<int, std::map<int, int>> parse_file(const std::string &filename) {
-    std::ifstream file(filename);
-    if (!file.is_open()) {
-        throw std::runtime_error("unable to open file: " + filename);
-    }
-
+std::pair<int, std::map<int, int>> parser(std::ifstream &file) {
     std::string line;
     getline(file, line);
     int earliest_timestamp = std::stoi(line);
@@ -58,18 +52,11 @@ std::uint64_t part_two(const std::map<int, int> &buses) {
 }
 
 int main() {
-    std::string filename = "../../input/2020/day_13/input.txt";
-    auto [earliest_timestamp, buses] = parse_file(filename);
+    Solver solver(2020, 13, "Shuttle Search");
 
-    std::cout << "--- Day 13: Shuttle Search ---" << std::endl;
-
-    auto start = benchmark::start();
-    std::cout << "\nPart 1: " << part_one(earliest_timestamp, buses) << std::endl;
-    benchmark::end(start);
-
-    start = benchmark::start();
-    std::cout << "\nPart 2: " << part_two(buses) << std::endl;
-    benchmark::end(start);
+    auto [earliest_timestamp, buses] = solver.parse_file(parser);
+    solver(part_one, earliest_timestamp, buses);
+    solver(part_two, buses);
 
     return 0;
 }

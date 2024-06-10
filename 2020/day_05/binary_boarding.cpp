@@ -1,19 +1,13 @@
 // --- Day 5: Binary Boarding ---
 
-#include "benchmark.h"
+#include "solver.h"
 
 #include <fstream>
-#include <iostream>
 #include <set>
 #include <string>
 #include <vector>
 
-std::vector<std::array<char, 10>> parse_file(const std::string &filename) {
-    std::ifstream file(filename);
-    if (!file.is_open()) {
-        throw std::runtime_error("unable to open file: " + filename);
-    }
-
+std::vector<std::array<char, 10>> parser(std::ifstream &file) {
     std::vector<std::array<char, 10>> boarding_passes;
     for (std::string line; getline(file, line);) {
         std::array<char, 10> pass{};
@@ -69,16 +63,11 @@ int part_two(const std::vector<std::array<char, 10>> &boarding_passes) {
 }
 
 int main() {
-    std::string filename = "../../input/2020/day_05/input.txt";
-    auto boarding_passes = parse_file(filename);
+    Solver solver(2020, 5, "Binary Boarding");
 
-    std::cout << "--- Day 5: Binary Boarding ---" << std::endl;
+    auto boarding_passes = solver.parse_file(parser);
+    solver(part_one, boarding_passes);
+    solver(part_two, boarding_passes);
 
-    auto start = benchmark::start();
-    std::cout << "\nPart 1: " << part_one(boarding_passes) << std::endl;
-    benchmark::end(start);
-
-    start = benchmark::start();
-    std::cout << "\nPart 2: " << part_two(boarding_passes) << std::endl;
-    benchmark::end(start);
+    return 0;
 }

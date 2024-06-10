@@ -1,18 +1,12 @@
 // --- Day 8: Handheld Halting ---
 
-#include "benchmark.h"
+#include "solver.h"
 
 #include <fstream>
-#include <iostream>
 #include <string>
 #include <vector>
 
-std::vector<std::pair<std::string, int>> parse_file(const std::string &filename) {
-    std::ifstream file(filename);
-    if (!file.is_open()) {
-        throw std::runtime_error("unable to open file: " + filename);
-    }
-
+std::vector<std::pair<std::string, int>> parser(std::ifstream &file) {
     std::vector<std::pair<std::string, int>> instructions;
     for (std::string line; getline(file, line);) {
         auto space_index = line.find(' ');
@@ -85,18 +79,11 @@ int part_two(const std::vector<std::pair<std::string, int>> &instructions) {
 }
 
 int main() {
-    std::string filename = "../../input/2020/day_08/input.txt";
-    auto instructions = parse_file(filename);
+    Solver solver(2020, 8, "Handheld Halting");
 
-    std::cout << "--- Day 8: Handheld Halting ---" << std::endl;
-
-    auto start = benchmark::start();
-    std::cout << "\nPart 1: " << part_one(instructions) << std::endl;
-    benchmark::end(start);
-
-    start = benchmark::start();
-    std::cout << "\nPart 2: " << part_two(instructions) << std::endl;
-    benchmark::end(start);
+    auto instructions = solver.parse_file(parser);
+    solver(part_one, instructions);
+    solver(part_two, instructions);
 
     return 0;
 }

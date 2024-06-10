@@ -1,19 +1,13 @@
 // --- Day 15: Rambunctious Recitation ---
 
-#include "benchmark.h"
+#include "solver.h"
 
 #include <fstream>
-#include <iostream>
 #include <string>
 #include <unordered_map>
 #include <vector>
 
-std::vector<std::uint64_t> parse_file(const std::string &filename) {
-    std::ifstream file(filename);
-    if (!file.is_open()) {
-        throw std::runtime_error("unable to open file: " + filename);
-    }
-
+std::vector<std::uint64_t> parser(std::fstream &file) {
     std::stringstream stream;
     stream << file.rdbuf();
 
@@ -42,18 +36,11 @@ std::uint64_t get_nth_number(const std::vector<std::uint64_t> &starting_numbers,
 }
 
 int main() {
-    std::string filename = "../../input/2020/day_15/input.txt";
-    auto starting_numbers = parse_file(filename);
+    Solver solver(2020, 15, "Rambunctious Recitation");
 
-    std::cout << "--- Day 15: Rambunctious Recitation ---" << std::endl;
-
-    auto start = benchmark::start();
-    std::cout << "\nPart 1: " << get_nth_number(starting_numbers, 2020) << std::endl;
-    benchmark::end(start);
-
-    start = benchmark::start();
-    std::cout << "\nPart 2: " << get_nth_number(starting_numbers, 30000000) << std::endl;
-    benchmark::end(start);
+    auto starting_numbers = solver.parse_file(parser);
+    solver(get_nth_number, starting_numbers, 2020);
+    solver(get_nth_number, starting_numbers, 30000000);
 
     return 0;
 }

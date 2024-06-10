@@ -1,19 +1,13 @@
 // --- Day 12: Rain Risk ---
 
-#include "benchmark.h"
+#include "solver.h"
 
 #include <cmath>
 #include <fstream>
-#include <iostream>
 #include <string>
 #include <vector>
 
-std::vector<std::pair<char, int>> parse_file(const std::string &filename) {
-    std::ifstream file(filename);
-    if (!file.is_open()) {
-        throw std::runtime_error("unable to open file: " + filename);
-    }
-
+std::vector<std::pair<char, int>> parser(std::ifstream &file) {
     std::vector<std::pair<char, int>> navigation_instructions;
     for (std::string line; getline(file, line);) {
         char action = line[0];
@@ -116,18 +110,11 @@ int part_two(const std::vector<std::pair<char, int>> &navigation_instructions) {
 }
 
 int main() {
-    std::string filename = "../../input/2020/day_12/input.txt";
-    auto navigation_instructions = parse_file(filename);
+    Solver solver(2020, 12, "Rain Risk");
 
-    std::cout << "--- Day 12: Rain Risk ---" << std::endl;
-
-    auto start = benchmark::start();
-    std::cout << "\nPart 1: " << part_one(navigation_instructions) << std::endl;
-    benchmark::end(start);
-
-    start = benchmark::start();
-    std::cout << "\nPart 2: " << part_two(navigation_instructions) << std::endl;
-    benchmark::end(start);
+    auto navigation_instructions = solver.parse_file(parser);
+    solver(part_one, navigation_instructions);
+    solver(part_two, navigation_instructions);
 
     return 0;
 }

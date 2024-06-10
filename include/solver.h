@@ -3,7 +3,6 @@
 #include "benchmark.h"
 
 #include <fstream>
-#include <functional>
 #include <iomanip>
 #include <iostream>
 #include <sstream>

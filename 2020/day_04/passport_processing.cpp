@@ -1,22 +1,16 @@
 // --- Day 4: Passport Processing ---
 
-#include "benchmark.h"
+#include "solver.h"
 
 #include <algorithm>
 #include <fstream>
-#include <iostream>
 #include <sstream>
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
 
-std::vector<std::unordered_map<std::string, std::string>> parse_file(const std::string &filename) {
-    std::ifstream file(filename);
-    if (!file.is_open()) {
-        throw std::runtime_error("unable to open file: " + filename);
-    }
-
+std::vector<std::unordered_map<std::string, std::string>> parser(std::ifstream &file) {
     std::unordered_map<std::string, std::string> passport;
     std::vector<std::unordered_map<std::string, std::string>> passports;
     for (std::string line; getline(file, line);) {
@@ -100,16 +94,11 @@ int part_two(const std::vector<std::unordered_map<std::string, std::string>> &pa
 }
 
 int main() {
-    std::string filename = "../../input/2020/day_04/input.txt";
-    auto passports = parse_file(filename);
+    Solver solver(2020, 4, "Passport Processing");
 
-    std::cout << "--- Day 4: Passport Processing ---" << std::endl;
+    auto passports = solver.parse_file(parser);
+    solver(part_one, passports);
+    solver(part_two, passports);
 
-    auto start = benchmark::start();
-    std::cout << "\nPart 1: " << part_one(passports) << std::endl;
-    benchmark::end(start);
-
-    start = benchmark::start();
-    std::cout << "\nPart 2: " << part_two(passports) << std::endl;
-    benchmark::end(start);
+    return 0;
 }

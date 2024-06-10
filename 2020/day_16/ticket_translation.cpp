@@ -1,9 +1,8 @@
 // --- Day 16: Ticket Translation ---
 
-#include "benchmark.h"
+#include "solver.h"
 
 #include <fstream>
-#include <iostream>
 #include <numeric>
 #include <ranges>
 #include <string>
@@ -23,12 +22,7 @@ Ticket parse_ticket(const std::string &line) {
     return ticket;
 }
 
-std::tuple<Rules, Ticket, std::vector<Ticket>> parse_file(const std::string &filename) {
-    std::ifstream file(filename);
-    if (!file.is_open()) {
-        throw std::runtime_error("unable to open file: " + filename);
-    }
-
+std::tuple<Rules, Ticket, std::vector<Ticket>> parser(std::ifstream &file) {
     Rules rules;
     for (std::string line; std::getline(file, line) && !line.empty();) {
         auto colon_index = line.find(':');
@@ -147,18 +141,11 @@ std::uint64_t part_two(const Rules &rules, const Ticket &my_ticket, const std::v
 }
 
 int main() {
-    std::string filename = "../../input/2020/day_16/input.txt";
-    auto [rules, my_ticket, tickets] = parse_file(filename);
+    Solver solver(2020, 16, "Ticket Translation");
 
-    std::cout << "--- Day 16: Ticket Translation ---" << std::endl;
-
-    auto start = benchmark::start();
-    std::cout << "\nPart 1: " << part_one(rules, tickets) << std::endl;
-    benchmark::end(start);
-
-    start = benchmark::start();
-    std::cout << "\nPart 2: " << part_two(rules, my_ticket, tickets) << std::endl;
-    benchmark::end(start);
+    auto [rules, my_ticket, tickets] = solver.parse_file(parser);
+    solver(part_one, rules, tickets);
+    solver(part_two, rules, my_ticket, tickets);
 
     return 0;
 }

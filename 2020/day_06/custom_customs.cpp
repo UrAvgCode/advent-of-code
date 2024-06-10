@@ -1,21 +1,15 @@
 // --- Day 6: Custom Customs ---
 
-#include "benchmark.h"
+#include "solver.h"
 
 #include <fstream>
-#include <iostream>
 #include <ranges>
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
 
-std::vector<std::vector<std::string>> parse_file(const std::string &filename) {
-    std::ifstream file(filename);
-    if (!file.is_open()) {
-        throw std::runtime_error("unable to open file: " + filename);
-    }
-
+std::vector<std::vector<std::string>> parser(std::ifstream &file) {
     std::vector<std::string> answers;
     std::vector<std::vector<std::string>> groups;
     for (std::string line; getline(file, line);) {
@@ -70,18 +64,11 @@ int part_two(const std::vector<std::vector<std::string>> &groups) {
 }
 
 int main() {
-    std::string filename = "../../input/2020/day_06/input.txt";
-    auto groups = parse_file(filename);
+    Solver solver(2020, 6, "Custom Customs");
 
-    std::cout << "--- Day 6: Custom Customs ---" << std::endl;
-
-    auto start = benchmark::start();
-    std::cout << "\nPart 1: " << part_one(groups) << std::endl;
-    benchmark::end(start);
-
-    start = benchmark::start();
-    std::cout << "\nPart 2: " << part_two(groups) << std::endl;
-    benchmark::end(start);
+    auto groups = solver.parse_file(parser);
+    solver(part_one, groups);
+    solver(part_two, groups);
 
     return 0;
 }

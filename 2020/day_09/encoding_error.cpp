@@ -1,20 +1,14 @@
 // --- Day 9: Encoding Error ---
 
-#include "benchmark.h"
+#include "solver.h"
 
 #include <algorithm>
 #include <fstream>
-#include <iostream>
 #include <string>
 #include <unordered_set>
 #include <vector>
 
-std::vector<std::uint64_t> parse_file(const std::string &filename) {
-    std::ifstream file(filename);
-    if (!file.is_open()) {
-        throw std::runtime_error("unable to open file: " + filename);
-    }
-
+std::vector<std::uint64_t> parser(std::ifstream &file) {
     std::vector<std::uint64_t> numbers;
     for (std::string line; getline(file, line);) {
         numbers.push_back(std::stoull(line));
@@ -61,18 +55,11 @@ std::uint64_t part_two(const std::vector<std::uint64_t> &numbers) {
 }
 
 int main() {
-    std::string filename = "../../input/2020/day_09/input.txt";
-    auto numbers = parse_file(filename);
+    Solver solver(2020, 9, "Encoding Error");
 
-    std::cout << "--- Day 9: Encoding Error ---" << std::endl;
-
-    auto start = benchmark::start();
-    std::cout << "\nPart 1: " << part_one(numbers) << std::endl;
-    benchmark::end(start);
-
-    start = benchmark::start();
-    std::cout << "\nPart 2: " << part_two(numbers) << std::endl;
-    benchmark::end(start);
+    auto numbers = solver.parse_file(parser);
+    solver(part_one, numbers);
+    solver(part_two, numbers);
 
     return 0;
 }

@@ -1,19 +1,13 @@
 // --- Day 10: Adapter Array ---
 
-#include "benchmark.h"
+#include "solver.h"
 
 #include <array>
 #include <fstream>
-#include <iostream>
 #include <set>
 #include <string>
 
-std::set<int> parse_file(const std::string &filename) {
-    std::ifstream file(filename);
-    if (!file.is_open()) {
-        throw std::runtime_error("unable to open file: " + filename);
-    }
-
+std::set<int> parser(std::ifstream &file) {
     std::set<int> joltage_adapters;
     for (std::string line; getline(file, line);) {
         joltage_adapters.insert(std::stoi(line));
@@ -59,18 +53,11 @@ std::uint64_t part_two(const std::set<int> &joltage_adapters) {
 }
 
 int main() {
-    std::string filename = "../../input/2020/day_10/input.txt";
-    auto joltage_adapters = parse_file(filename);
+    Solver solver(2020, 10, "Adapter Array");
 
-    std::cout << "--- Day 10: Adapter Array ---" << std::endl;
-
-    auto start = benchmark::start();
-    std::cout << "\nPart 1: " << part_one(joltage_adapters) << std::endl;
-    benchmark::end(start);
-
-    start = benchmark::start();
-    std::cout << "\nPart 2: " << part_two(joltage_adapters) << std::endl;
-    benchmark::end(start);
+    auto joltage_adapters = solver.parse_file(parser);
+    solver(part_one, joltage_adapters);
+    solver(part_two, joltage_adapters);
 
     return 0;
 }

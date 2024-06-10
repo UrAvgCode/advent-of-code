@@ -1,18 +1,12 @@
 // --- Day 17: Conway Cubes ---
 
 #include "conway_cubes.h"
-#include "benchmark.h"
+#include "solver.h"
 
 #include <fstream>
-#include <iostream>
 #include <string>
 
-std::pair<std::vector<char>, std::size_t> parse_file(const std::string &filename) {
-    std::ifstream file(filename);
-    if (!file.is_open()) {
-        throw std::runtime_error("unable to open file: " + filename);
-    }
-
+std::pair<std::vector<char>, std::size_t> parser(std::ifstream &file) {
     std::size_t width = 0;
     std::vector<char> slice;
     for (std::string line; std::getline(file, line); width = line.size()) {
@@ -129,18 +123,11 @@ int part_two(const std::vector<char> &slice, std::size_t width) {
 }
 
 int main() {
-    std::string filename = "../../input/2020/day_17/input.txt";
-    auto [slice, width] = parse_file(filename);
+    Solver solver(2020, 17, "Conway Cubes");
 
-    std::cout << "--- Day 17: Conway Cubes ---" << std::endl;
-
-    auto start = benchmark::start();
-    std::cout << "\nPart 1: " << part_one(slice, width) << std::endl;
-    benchmark::end(start);
-
-    start = benchmark::start();
-    std::cout << "\nPart 2: " << part_two(slice, width) << std::endl;
-    benchmark::end(start);
+    auto [slice, width] = solver.parse_file(parser);
+    solver(part_one, slice, width);
+    solver(part_two, slice, width);
 
     return 0;
 }

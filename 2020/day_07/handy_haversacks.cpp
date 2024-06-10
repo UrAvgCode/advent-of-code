@@ -1,9 +1,8 @@
 // --- Day 7: Handy Haversacks ---
 
-#include "benchmark.h"
+#include "solver.h"
 
 #include <fstream>
-#include <iostream>
 #include <queue>
 #include <ranges>
 #include <sstream>
@@ -13,12 +12,7 @@
 
 using BagMap = std::unordered_map<std::string, std::vector<std::pair<int, std::string>>>;
 
-BagMap parse_file(const std::string &filename) {
-    std::ifstream file(filename);
-    if (!file.is_open()) {
-        throw std::runtime_error("unable to open file: " + filename);
-    }
-
+BagMap parser(std::ifstream &file) {
     BagMap bag_map;
     for (std::string line; getline(file, line);) {
         std::vector<std::string> tokens;
@@ -99,18 +93,11 @@ int part_two(const BagMap &bag_map) {
 }
 
 int main() {
-    std::string filename = "../../input/2020/day_07/input.txt";
-    auto bag_map = parse_file(filename);
+    Solver solver(2020, 7, "Handy Haversacks");
 
-    std::cout << "--- Day 7: Handy Haversacks ---" << std::endl;
-
-    auto start = benchmark::start();
-    std::cout << "\nPart 1: " << part_one(bag_map) << std::endl;
-    benchmark::end(start);
-
-    start = benchmark::start();
-    std::cout << "\nPart 2: " << part_two(bag_map) << std::endl;
-    benchmark::end(start);
+    auto bag_map = solver.parse_file(parser);
+    solver(part_one, bag_map);
+    solver(part_two, bag_map);
 
     return 0;
 }

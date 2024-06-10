@@ -1,10 +1,9 @@
 // --- Day 2: Password Philosophy ---
 
-#include "benchmark.h"
+#include "solver.h"
 
 #include <algorithm>
 #include <fstream>
-#include <iostream>
 #include <sstream>
 #include <string>
 #include <tuple>
@@ -12,12 +11,7 @@
 
 using PasswordPolicy = std::tuple<int, int, char, std::string>;
 
-std::vector<PasswordPolicy> parse_file(const std::string &filename) {
-    std::ifstream file(filename);
-    if (file.fail()) {
-        throw std::runtime_error("unable to open file: " + filename);
-    }
-
+std::vector<PasswordPolicy> parser(std::ifstream &file) {
     std::vector<PasswordPolicy> passwords;
     for (std::string line; getline(file, line);) {
         std::stringstream stream(line);
@@ -50,16 +44,11 @@ std::size_t part_two(const std::vector<PasswordPolicy> &password_policies) {
 }
 
 int main() {
-    std::string filename = "../../input/2020/day_02/input.txt";
-    auto password_policies = parse_file(filename);
+    Solver solver(2020, 2, "Password Philosophy");
 
-    std::cout << "--- Day 2: Password Philosophy ---" << std::endl;
+    auto password_policies = solver.parse_file(parser);
+    solver(part_one, password_policies);
+    solver(part_two, password_policies);
 
-    auto start = benchmark::start();
-    std::cout << "\nPart 1: " << part_one(password_policies) << std::endl;
-    benchmark::end(start);
-
-    start = benchmark::start();
-    std::cout << "\nPart 2: " << part_two(password_policies) << std::endl;
-    benchmark::end(start);
+    return 0;
 }

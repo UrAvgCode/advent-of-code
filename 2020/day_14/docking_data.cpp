@@ -1,9 +1,8 @@
 // --- Day 14: Docking Data ---
 
-#include "benchmark.h"
+#include "solver.h"
 
 #include <fstream>
-#include <iostream>
 #include <ranges>
 #include <string>
 #include <unordered_map>
@@ -11,12 +10,7 @@
 
 using Program = std::vector<std::pair<std::string, std::vector<std::array<std::uint64_t, 2>>>>;
 
-Program parse_file(const std::string &filename) {
-    std::ifstream file(filename);
-    if (!file.is_open()) {
-        throw std::runtime_error("unable to open file: " + filename);
-    }
-
+Program parser(std::ifstream &file) {
     std::string mask;
     std::vector<std::array<std::uint64_t, 2>> memory;
     Program initialization_program;
@@ -69,14 +63,10 @@ std::uint64_t part_one(const Program &initialization_program) {
 }
 
 int main() {
-    std::string filename = "../../input/2020/day_14/input.txt";
-    auto initialization_program = parse_file(filename);
+    Solver solver(2020, 14, "Docking Data");
 
-    std::cout << "--- Day 14: Docking Data ---" << std::endl;
-
-    auto start = benchmark::start();
-    std::cout << "\nPart 1: " << part_one(initialization_program) << std::endl;
-    benchmark::end(start);
+    auto initialization_program = solver.parse_file(parser);
+    solver(part_one, initialization_program);
 
     return 0;
 }
