@@ -1,18 +1,12 @@
 // --- Day 18: Operation Order ---
 
-#include "benchmark.h"
+#include "solver.h"
 
 #include <fstream>
-#include <iostream>
 #include <stack>
 #include <string>
 
-std::vector<std::string> parse_file(const std::string &filename) {
-    std::ifstream file(filename);
-    if (!file.is_open()) {
-        throw std::runtime_error("unable to open file: " + filename);
-    }
-
+std::vector<std::string> parser(std::ifstream &file) {
     std::vector<std::string> expressions;
     for (std::string line; std::getline(file, line);) {
         expressions.push_back(line);
@@ -134,18 +128,11 @@ std::uint64_t part_two(const std::vector<std::string> &expressions) {
 }
 
 int main() {
-    std::string filename = "../../input/2020/day_18/input.txt";
-    auto expressions = parse_file(filename);
+    Solver solver(2020, 18, "Operation Order");
 
-    std::cout << "--- Day 18: Operation Order ---" << std::endl;
-
-    auto start = benchmark::start();
-    std::cout << "\nPart 1: " << part_one(expressions) << std::endl;
-    benchmark::end(start);
-
-    start = benchmark::start();
-    std::cout << "\nPart 2: " << part_two(expressions) << std::endl;
-    benchmark::end(start);
+    auto expressions = solver.parse_file(parser);
+    solver(part_one, expressions);
+    solver(part_two, expressions);
 
     return 0;
 }
