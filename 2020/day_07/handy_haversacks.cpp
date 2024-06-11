@@ -43,27 +43,23 @@ BagMap parser(std::ifstream &file) {
     return bag_map;
 }
 
-bool contains_shiny_gold(const BagMap &bag_map, const std::string &initial_bag) {
-    auto bag_queue = std::queue<std::string>({initial_bag});
-    while (!bag_queue.empty()) {
-        auto current_bag = bag_queue.front();
-        bag_queue.pop();
+std::uint32_t part_one(const BagMap &bag_map) {
+    return std::ranges::count_if(std::views::keys(bag_map), [&bag_map](const auto &initial_bag) {
+        auto bag_queue = std::queue<std::string>({initial_bag});
+        while (!bag_queue.empty()) {
+            auto current_bag = bag_queue.front();
+            bag_queue.pop();
 
-        for (const auto &containing_bag: std::views::values(bag_map.at(current_bag))) {
-            if (containing_bag == "shiny gold") {
-                return true;
-            } else {
+            for (const auto &containing_bag: std::views::values(bag_map.at(current_bag))) {
+                if (containing_bag == "shiny gold") {
+                    return true;
+                }
+
                 bag_queue.push(containing_bag);
             }
         }
-    }
 
-    return false;
-}
-
-std::uint32_t part_one(const BagMap &bag_map) {
-    return std::ranges::count_if(std::views::keys(bag_map), [&bag_map](const auto &initial_bag) {
-        return contains_shiny_gold(bag_map, initial_bag);
+        return false;
     });
 }
 
