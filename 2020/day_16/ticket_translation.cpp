@@ -78,7 +78,7 @@ int part_one(const Rules &rules, const std::vector<Ticket> &tickets) {
         }
     }
 
-    return std::accumulate(invalid_values.begin(), invalid_values.end(), 0);
+    return std::reduce(invalid_values.begin(), invalid_values.end());
 }
 
 std::uint64_t part_two(const Rules &rules, const Ticket &my_ticket, const std::vector<Ticket> &tickets) {

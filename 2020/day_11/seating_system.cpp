@@ -18,7 +18,7 @@ std::pair<std::vector<char>, std::size_t> parser(std::ifstream &file) {
     return {seat_layout, width};
 }
 
-int part_one(const std::vector<char> &seat_layout, const std::size_t width) {
+std::uint32_t part_one(const std::vector<char> &seat_layout, const std::size_t width) {
     auto current_layout = std::vector<char>(seat_layout);
     const auto height = seat_layout.size() / width;
 
@@ -58,14 +58,14 @@ int part_one(const std::vector<char> &seat_layout, const std::size_t width) {
         }
 
         if (current_layout == next_layout) {
-            return static_cast<int>(std::ranges::count(current_layout.begin(), current_layout.end(), '#'));
+            return std::ranges::count(current_layout.begin(), current_layout.end(), '#');
         } else {
             std::swap(current_layout, next_layout);
         }
     }
 }
 
-int part_two(const std::vector<char> &seat_layout, const std::size_t width) {
+std::uint32_t part_two(const std::vector<char> &seat_layout, const std::size_t width) {
     auto current_layout = std::vector<char>(seat_layout);
     const auto height = seat_layout.size() / width;
 
@@ -111,7 +111,7 @@ int part_two(const std::vector<char> &seat_layout, const std::size_t width) {
         }
 
         if (current_layout == next_layout) {
-            return static_cast<int>(std::ranges::count(current_layout.begin(), current_layout.end(), '#'));
+            return std::ranges::count(current_layout.begin(), current_layout.end(), '#');
         } else {
             std::swap(current_layout, next_layout);
         }

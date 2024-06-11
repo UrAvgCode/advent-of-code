@@ -3,6 +3,7 @@
 #include "solver.h"
 
 #include <fstream>
+#include <numeric>
 #include <ranges>
 #include <string>
 #include <unordered_map>
@@ -54,12 +55,8 @@ std::uint64_t part_one(const Program &initialization_program) {
         }
     }
 
-    std::uint64_t sum_of_all_values = 0;
-    for (const auto &value: std::views::values(computer_memory)) {
-        sum_of_all_values += value;
-    }
-
-    return sum_of_all_values;
+    auto memory_values = std::views::values(computer_memory);
+    return std::reduce(memory_values.begin(), memory_values.end());
 }
 
 int main() {

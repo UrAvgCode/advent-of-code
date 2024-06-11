@@ -71,26 +71,16 @@ bool validate_passport(const std::unordered_map<std::string, std::string> &passp
     return true;
 }
 
-int part_one(const std::vector<std::unordered_map<std::string, std::string>> &passports) {
-    int valid_passport_count = 0;
-    for (const auto &passport: passports) {
-        if (passport.size() == 7) {
-            valid_passport_count++;
-        }
-    }
-
-    return valid_passport_count;
+std::uint32_t part_one(const std::vector<std::unordered_map<std::string, std::string>> &passports) {
+    return std::ranges::count_if(passports, [](const auto &passport) {
+        return passport.size() == 7;
+    });
 }
 
-int part_two(const std::vector<std::unordered_map<std::string, std::string>> &passports) {
-    int valid_passport_count = 0;
-    for (const auto &passport: passports) {
-        if (passport.size() == 7 && validate_passport(passport)) {
-            valid_passport_count++;
-        }
-    }
-
-    return valid_passport_count;
+std::uint32_t part_two(const std::vector<std::unordered_map<std::string, std::string>> &passports) {
+    return std::ranges::count_if(passports, [](const auto &passport) {
+        return passport.size() == 7 && validate_passport(passport);
+    });
 }
 
 int main() {

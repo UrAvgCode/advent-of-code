@@ -2,7 +2,9 @@
 
 #include "solver.h"
 
+#include <algorithm>
 #include <fstream>
+#include <numeric>
 #include <ranges>
 #include <string>
 #include <unordered_map>
@@ -25,42 +27,32 @@ std::vector<std::vector<std::string>> parser(std::ifstream &file) {
     return groups;
 }
 
-int part_one(const std::vector<std::vector<std::string>> &groups) {
-    int sum_of_counts = 0;
-
-    for (const auto &answers: groups) {
+std::uint32_t part_one(const std::vector<std::vector<std::string>> &groups) {
+    return std::transform_reduce(groups.begin(), groups.end(), 0u, std::plus<>(), [](const auto &answers) {
         std::unordered_set<char> answer_set;
         for (const auto &answer: answers) {
             answer_set.insert(answer.begin(), answer.end());
         }
 
-        sum_of_counts += static_cast<int>(answer_set.size());
-    }
-
-    return sum_of_counts;
+        return answer_set.size();
+    });
 }
 
-int part_two(const std::vector<std::vector<std::string>> &groups) {
-    int sum_of_counts = 0;
-
-    for (const auto &answers: groups) {
+std::uint32_t part_two(const std::vector<std::vector<std::string>> &groups) {
+    return std::transform_reduce(groups.begin(), groups.end(), 0u, std::plus<>(), [](const auto &answers) {
         std::unordered_map<char, int> answer_map;
         auto group_size = answers.size();
 
         for (const auto &answer: answers) {
             for (char c: answer) {
-                answer_map[c]++;
+                ++answer_map[c];
             }
         }
 
-        for (const auto &count: std::views::values(answer_map)) {
-            if (count == group_size) {
-                sum_of_counts++;
-            }
-        }
-    }
-
-    return sum_of_counts;
+        return std::ranges::count_if(std::views::values(answer_map), [&group_size](const auto &count) {
+            return count == group_size;
+        });
+    });
 }
 
 int main() {

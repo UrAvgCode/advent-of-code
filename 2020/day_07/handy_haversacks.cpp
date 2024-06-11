@@ -2,6 +2,7 @@
 
 #include "solver.h"
 
+#include <algorithm>
 #include <fstream>
 #include <queue>
 #include <ranges>
@@ -60,19 +61,14 @@ bool contains_shiny_gold(const BagMap &bag_map, const std::string &initial_bag) 
     return false;
 }
 
-int part_one(const BagMap &bag_map) {
-    int count_of_bags = 0;
-    for (const auto &initial_bag: std::views::keys(bag_map)) {
-        if (contains_shiny_gold(bag_map, initial_bag)) {
-            count_of_bags++;
-        }
-    }
-
-    return count_of_bags;
+std::uint32_t part_one(const BagMap &bag_map) {
+    return std::ranges::count_if(std::views::keys(bag_map), [&bag_map](const auto &initial_bag) {
+        return contains_shiny_gold(bag_map, initial_bag);
+    });
 }
 
-int part_two(const BagMap &bag_map) {
-    int count_of_bags = 0;
+std::uint32_t part_two(const BagMap &bag_map) {
+    std::uint32_t count_of_bags = 0;
 
     auto bag_queue = std::queue<std::pair<int, std::string>>();
     bag_queue.emplace(1, "shiny gold");
