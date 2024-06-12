@@ -16,7 +16,7 @@ std::set<int> parser(std::ifstream &file) {
 }
 
 int part_one(const std::set<int> &entries) {
-    for (auto entry: entries) {
+    for (const auto entry: entries) {
         int missing = 2020 - entry;
         if (entries.contains(missing)) {
             return entry * missing;
@@ -40,9 +40,9 @@ int part_two(const std::set<int> &entries) {
 }
 
 int main() {
-    Solver solver(2020, 2, "Report Repair");
+    Solver solver(2020, 1, "Report Repair");
 
-    auto entries = solver.parse_file(parser);
+    const auto entries = solver.parse_file(parser);
     solver(part_one, entries);
     solver(part_two, entries);
 
