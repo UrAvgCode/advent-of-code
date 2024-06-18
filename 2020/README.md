@@ -1,6 +1,6 @@
 # 🎄 Advent of Code 2020 🎄
 
-### Collected Stars 31/50 ⭐
+### Collected Stars 35/50 ⭐
 
 | Day                                                                   | Status | Languages                                                                        |
 |-----------------------------------------------------------------------|--------|----------------------------------------------------------------------------------|
@@ -20,4 +20,5 @@
 | [Day 14: Docking Data](day_14/docking_data.cpp)                       | ⭐ ❌    | [![C++](https://skillicons.dev/icons?i=cpp)](day_14/docking_data.cpp)            |
 | [Day 15: Rambunctious Recitation](day_15/rambunctious_recitation.cpp) | ⭐ ⭐    | [![C++](https://skillicons.dev/icons?i=cpp)](day_15/rambunctious_recitation.cpp) |
 | [Day 16: Ticket Translation](day_16/ticket_translation.cpp)           | ⭐ ⭐    | [![C++](https://skillicons.dev/icons?i=cpp)](day_16/ticket_translation.cpp)      |
-
+| [Day 17: Conway Cubes](day_17/conway_cubes.cpp)                       | ⭐ ⭐    | [![C++](https://skillicons.dev/icons?i=cpp)](day_17/conway_cubes.cpp)            |
+| [Day 18: Operation Order](day_18/operation_order.cpp)                 | ⭐ ⭐    | [![C++](https://skillicons.dev/icons?i=cpp)](day_18/operation_order.cpp)         |

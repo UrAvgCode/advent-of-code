@@ -21,7 +21,7 @@ My solutions to the [Advent of Code](https://adventofcode.com/) puzzles in Pytho
 | [2023](2023) | 44/50 ⭐ | ![Python, C++](https://skillicons.dev/icons?i=python,cpp) |
 | [2022](2022) | 24/50 ⭐ | ![Python](https://skillicons.dev/icons?i=python)          |
 | [2021](2021) | 11/50 ⭐ | ![Python](https://skillicons.dev/icons?i=python)          |
-| [2020](2020) | 31/50 ⭐ | ![C++](https://skillicons.dev/icons?i=cpp)                |
+| [2020](2020) | 35/50 ⭐ | ![C++](https://skillicons.dev/icons?i=cpp)                |
 
 #
 
