@@ -1,11 +1,10 @@
 // --- Day 12: Hot Springs ---
 
 #include "hot_springs.h"
-#include "benchmark.h"
+#include "solver.h"
 
 #include <execution>
 #include <fstream>
-#include <iostream>
 #include <numeric>
 #include <sstream>
 #include <string>
@@ -17,18 +16,13 @@ auto policy = std::execution::par;
 auto policy = std::execution::seq;
 #endif
 
-std::vector<ConditionRecord> parse_file(const std::string &filename) {
-    std::ifstream file(filename);
-    if (!file) {
-        throw std::runtime_error("unable to open file: " + filename);
-    }
-
+std::vector<ConditionRecord> parser(std::ifstream &file) {
     std::vector<ConditionRecord> records;
     for (std::string line; getline(file, line);) {
-        auto space_pos = line.find(' ');
+        const auto space_pos = line.find(' ');
         auto springs = line.substr(0, space_pos);
 
-        auto criteria = std::vector<std::uint8_t>();
+        std::vector<std::uint8_t> criteria;
         auto criteria_stream = std::stringstream(line.substr(space_pos + 1));
         for (std::string temp; getline(criteria_stream, temp, ',');) {
             criteria.push_back(stoi(temp));
@@ -51,14 +45,14 @@ std::uint64_t get_arrangements(const ConditionRecord &record) {
             return criteria.empty() || (criteria.size() == 1 && criteria[0] == size);
         }
 
-        auto cache_key = ConditionRecord{springs, criteria, size};
+        const auto cache_key = ConditionRecord{springs, criteria, size};
         if (cache.contains(cache_key)) {
             return cache[cache_key];
         }
 
         std::uint64_t arrangements = 0;
-        char first_char = springs[0];
-        auto rest_springs = springs.substr(1);
+        const char first_char = springs[0];
+        const auto rest_springs = springs.substr(1);
 
         if (first_char == '#' || first_char == '?') {
             if (!criteria.empty()) {
@@ -103,16 +97,11 @@ std::uint64_t part_two(const std::vector<ConditionRecord> &condition_records) {
 }
 
 int main() {
-    std::string filename = "../../input/2023/day_12/input.txt";
-    auto condition_records = parse_file(filename);
+    Solver solver(2023, 12, "Hot Springs");
 
-    std::cout << "--- Day 12: Hot Springs ---" << std::endl;
+    const auto condition_records = solver.parse_file(parser);
+    solver(part_one, condition_records);
+    solver(part_two, condition_records);
 
-    auto start = benchmark::start();
-    std::cout << "\nPart 1: " << part_one(condition_records) << std::endl;
-    benchmark::end(start);
-
-    start = benchmark::start();
-    std::cout << "\nPart 2: " << part_two(condition_records) << std::endl;
-    benchmark::end(start);
+    return 0;
 }
