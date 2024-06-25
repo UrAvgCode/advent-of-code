@@ -9,7 +9,6 @@
 #include <string>
 
 class Solver {
-private:
     const int _year;
     const int _day;
     const std::string _name;
@@ -23,7 +22,7 @@ public:
 
     template<typename Func, typename... Args>
     void operator()(Func func, Args... args) {
-        auto start = benchmark::start();
+        const auto start = benchmark::start();
         std::cout << "\nPart " << current_part++ << ": " << func(args...) << std::endl;
         benchmark::end(start);
     }

@@ -5,13 +5,13 @@
 #include <string>
 
 namespace benchmark {
-    std::chrono::time_point<std::chrono::system_clock> start() {
+    inline std::chrono::time_point<std::chrono::system_clock> start() {
         return std::chrono::high_resolution_clock::now();
     }
 
-    void end(std::chrono::time_point<std::chrono::system_clock> start) {
-        auto end = std::chrono::high_resolution_clock::now();
-        auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
+    inline void end(const std::chrono::time_point<std::chrono::system_clock> start) {
+        const auto end = std::chrono::high_resolution_clock::now();
+        const auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
         auto output = static_cast<double>(duration.count());
 
         std::string unit;
@@ -28,4 +28,4 @@ namespace benchmark {
 
         std::cout << "Time: " << output << unit << std::endl;
     }
-}
+} // namespace benchmark
