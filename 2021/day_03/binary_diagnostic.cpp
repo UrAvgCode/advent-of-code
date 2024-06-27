@@ -2,8 +2,10 @@
 
 #include "solver.h"
 
+#include <algorithm>
 #include <bitset>
 #include <fstream>
+#include <functional>
 #include <string>
 #include <vector>
 
@@ -17,7 +19,7 @@ std::vector<std::string> parser(std::ifstream &file) {
 }
 
 std::uint32_t part_one(const std::vector<std::string> &diagnostic_report) {
-    const auto number_of_bits = diagnostic_report[0].size();
+    const auto number_of_bits = diagnostic_report.front().size();
     std::vector ones(number_of_bits, 0);
     std::vector zeros(number_of_bits, 0);
 
@@ -44,32 +46,23 @@ std::uint32_t part_one(const std::vector<std::string> &diagnostic_report) {
 }
 
 std::uint32_t part_two(const std::vector<std::string> &diagnostic_report) {
-    auto filter_diagnostic_report = [](std::vector<std::string> report, auto bit_criteria) {
-        for (std::size_t i = 0; report.size() > 1; ++i) {
-            std::vector<std::string> next_diagnostic_report;
-
-            int ones = 0;
-            int zeros = 0;
-            for (const auto &binary_number: report) {
-                ones += binary_number[i] == '1';
-                zeros += binary_number[i] == '0';
-            }
+    auto compute_rating = [&](const std::function<bool(std::size_t, std::size_t)> &bit_criteria) {
+        auto filtered_report = diagnostic_report;
+        for (std::size_t i = 0; filtered_report.size() > 1; ++i) {
+            const std::size_t ones = std::ranges::count_if(filtered_report, [i](const auto &binary) { return binary[i] == '1'; });
+            const std::size_t zeros = filtered_report.size() - ones;
 
             const char significant_bit = bit_criteria(ones, zeros) ? '1' : '0';
-            for (const auto &binary_number: report) {
-                if (binary_number[i] == significant_bit) {
-                    next_diagnostic_report.push_back(binary_number);
-                }
-            }
-
-            report = next_diagnostic_report;
+            std::erase_if(filtered_report, [i, significant_bit](const std::string &binary_number) {
+                return binary_number[i] != significant_bit;
+            });
         }
 
-        return std::bitset<32>(report[0]).to_ulong();
+        return std::bitset<32>(filtered_report.front()).to_ulong();
     };
 
-    const auto oxygen_generator_rating = filter_diagnostic_report(diagnostic_report, std::greater_equal{});
-    const auto co2_scrubber_rating = filter_diagnostic_report(diagnostic_report, std::less{});
+    const auto oxygen_generator_rating = compute_rating(std::greater_equal{});
+    const auto co2_scrubber_rating = compute_rating(std::less{});
 
     return oxygen_generator_rating * co2_scrubber_rating;
 }
