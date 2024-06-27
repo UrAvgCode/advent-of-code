@@ -188,5 +188,6 @@ build/
 cmake-build-*/
 
 # User-specific stuff
+session_cookie
 .vscode/
 .idea/
