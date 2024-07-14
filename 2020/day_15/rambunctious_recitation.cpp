@@ -7,7 +7,7 @@
 #include <unordered_map>
 #include <vector>
 
-std::vector<std::uint64_t> parser(std::fstream &file) {
+std::vector<std::uint64_t> parser(std::ifstream &file) {
     std::stringstream stream;
     stream << file.rdbuf();
 
