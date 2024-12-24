@@ -43,7 +43,7 @@ def fetch_all_inputs():
         session_cookie = file.read().strip()
 
     current_date = datetime.now()
-    if datetime.month == 12:
+    if current_date.month == 12:
         end_year = current_date.year
         end_day = min(current_date.day, 25)
     else:
