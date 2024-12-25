@@ -47,11 +47,45 @@ std::uint64_t part_one(const std::vector<std::vector<int>> &reports) {
     return number_of_safe_reports;
 }
 
+std::uint64_t part_two(const std::vector<std::vector<int>> &reports) {
+    const auto number_of_safe_reports = std::ranges::count_if(reports, [](const auto &report) {
+        for (std::size_t i = 0; i < report.size(); ++i) {
+            auto modified_report = report;
+            modified_report.erase(modified_report.begin() + i);
+
+            for (std::size_t j = 1; j < modified_report.size(); ++j) {
+                if (modified_report[j] <= modified_report[j - 1] || modified_report[j] - modified_report[j - 1] > 3) {
+                    break;
+                }
+
+                if (j == modified_report.size() - 1) {
+                    return true;
+                }
+            }
+
+            for (std::size_t j = 1; j < modified_report.size(); ++j) {
+                if (modified_report[j] >= modified_report[j - 1] || modified_report[j - 1] - modified_report[j] > 3) {
+                    break;
+                }
+
+                if (j == modified_report.size() - 1) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    });
+
+    return number_of_safe_reports;
+}
+
 int main() {
     Solver solver(2024, 2, "Red-Nosed Reports");
 
     const auto reports = solver.parse_file(parser);
     solver(part_one, reports);
+    solver(part_two, reports);
 
     return 0;
 }
