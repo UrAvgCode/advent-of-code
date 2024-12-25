@@ -17,17 +17,13 @@ std::string parser(std::ifstream &file) {
 }
 
 std::uint64_t part_one(const std::string &instructions) {
-    const auto regex_pattern = std::regex(R"(mul\(\d+,\d+\))");
-    const auto regex = std::sregex_iterator(instructions.begin(), instructions.end(), regex_pattern);
+    const std::regex regex_pattern(R"(mul\((\d+),(\d+)\))");
+    const auto regex_begin = std::sregex_iterator(instructions.begin(), instructions.end(), regex_pattern);
     const auto regex_end = std::sregex_iterator();
 
-    return std::transform_reduce(regex, regex_end, 0ull, std::plus<>(), [](auto &it) {
-        auto instruction = it.str();
-        const std::size_t comma_index = instruction.find(',');
-
-        auto factor_one = std::stoull(instruction.substr(4, comma_index - 4));
-        auto factor_two = std::stoull(instruction.substr(comma_index + 1, instruction.size() - comma_index + 2));
-
+    return std::transform_reduce(regex_begin, regex_end, 0ull, std::plus<>(), [](const auto &match) {
+        auto factor_one = std::stoull(match[1].str());
+        auto factor_two = std::stoull(match[2].str());
         return factor_one * factor_two;
     });
 }
