@@ -7,6 +7,7 @@
 #include <fstream>
 #include <numeric>
 #include <string>
+#include <unordered_map>
 
 std::array<std::vector<int>, 2> parser(std::ifstream &file) {
     std::vector<int> left_list;
@@ -34,11 +35,24 @@ int part_one(const std::vector<int> &left_list, const std::vector<int> &right_li
     return total_distance;
 }
 
+int part_two(const std::vector<int> &left_list, const std::vector<int> &right_list) {
+    std::unordered_map<int, int> counts;
+    for (const int &value: right_list) {
+        ++counts[value];
+    }
+
+    const int similarity_score = std::transform_reduce(left_list.begin(), left_list.end(), 0, std::plus<>(),
+                                                       [&counts](const int value) { return value * counts[value]; });
+
+    return similarity_score;
+}
+
 int main() {
     Solver solver(2024, 1, "Historian Hysteria");
 
     const auto [left_list, right_list] = solver.parse_file(parser);
     solver(part_one, left_list, right_list);
+    solver(part_two, left_list, right_list);
 
     return 0;
 }
