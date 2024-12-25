@@ -8,7 +8,7 @@
 #include <string>
 #include <vector>
 
-std::string parser(std::ifstream &file) {
+std::string parser(const std::ifstream &file) {
     std::vector<std::vector<int>> reports;
 
     std::stringstream buffer;
