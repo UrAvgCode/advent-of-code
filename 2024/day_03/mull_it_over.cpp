@@ -28,11 +28,39 @@ std::uint64_t part_one(const std::string &instructions) {
     });
 }
 
+std::uint64_t part_two(const std::string &instructions) {
+    const std::regex regex_pattern(R"(mul\((\d+),(\d+)\)|(don't\(\))|(do\(\)))");
+    const auto regex_begin = std::sregex_iterator(instructions.begin(), instructions.end(), regex_pattern);
+    const auto regex_end = std::sregex_iterator();
+
+    bool enabled = true;
+    return std::transform_reduce(regex_begin, regex_end, 0ull, std::plus<>(), [&enabled](const auto &match) {
+        if (match[3].matched) {
+            enabled = false;
+            return 0ull;
+        }
+
+        if (match[4].matched) {
+            enabled = true;
+            return 0ull;
+        }
+
+        if (enabled) {
+            auto factor_one = std::stoull(match[1].str());
+            auto factor_two = std::stoull(match[2].str());
+            return factor_one * factor_two;
+        }
+
+        return 0ull;
+    });
+}
+
 int main() {
     Solver solver(2024, 3, "Mull It Over");
 
     const auto instructions = solver.parse_file(parser);
     solver(part_one, instructions);
+    solver(part_two, instructions);
 
     return 0;
 }
