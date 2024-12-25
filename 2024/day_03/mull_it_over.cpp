@@ -34,24 +34,18 @@ std::uint64_t part_two(const std::string &instructions) {
     const auto regex_end = std::sregex_iterator();
 
     bool enabled = true;
-    return std::transform_reduce(regex_begin, regex_end, 0ull, std::plus<>(), [&enabled](const auto &match) {
+    return std::accumulate(regex_begin, regex_end, 0ull, [&enabled](auto sum, const auto &match) {
         if (match[3].matched) {
             enabled = false;
-            return 0ull;
-        }
-
-        if (match[4].matched) {
+        } else if (match[4].matched) {
             enabled = true;
-            return 0ull;
+        } else if (enabled) {
+            const auto factor_one = std::stoull(match[1].str());
+            const auto factor_two = std::stoull(match[2].str());
+            sum += factor_one * factor_two;
         }
 
-        if (enabled) {
-            auto factor_one = std::stoull(match[1].str());
-            auto factor_two = std::stoull(match[2].str());
-            return factor_one * factor_two;
-        }
-
-        return 0ull;
+        return sum;
     });
 }
 
