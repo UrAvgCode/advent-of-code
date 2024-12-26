@@ -1,6 +1,6 @@
 # 🎄 Advent of Code 🎄
 
-My solutions to the [Advent of Code](https://adventofcode.com/) puzzles in Python and some C++.
+My solutions to the [Advent of Code](https://adventofcode.com/) puzzles in Python and C++.
 
 #
 
@@ -18,7 +18,7 @@ My solutions to the [Advent of Code](https://adventofcode.com/) puzzles in Pytho
 
 | Year         | Stars   | Languages                                                 |
 |--------------|---------|-----------------------------------------------------------|
-| [2024](2024) | 4/50 ⭐  | ![C++](https://skillicons.dev/icons?i=cpp)                |
+| [2024](2024) | 08/50 ⭐ | ![C++](https://skillicons.dev/icons?i=cpp)                |
 | [2023](2023) | 44/50 ⭐ | ![Python, C++](https://skillicons.dev/icons?i=python,cpp) |
 | [2022](2022) | 24/50 ⭐ | ![Python](https://skillicons.dev/icons?i=python)          |
 | [2021](2021) | 11/50 ⭐ | ![Python](https://skillicons.dev/icons?i=python)          |
