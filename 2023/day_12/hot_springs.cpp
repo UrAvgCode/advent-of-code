@@ -1,6 +1,6 @@
 // --- Day 12: Hot Springs ---
 
-#include "hot_springs.h"
+#include "record.h"
 #include "solver.h"
 
 #include <execution>
@@ -11,13 +11,15 @@
 #include <unordered_map>
 
 #ifdef PARALLEL
-auto policy = std::execution::par;
+constexpr auto policy = std::execution::par;
 #else
-auto policy = std::execution::seq;
+constexpr auto policy = std::execution::seq;
 #endif
 
-std::vector<ConditionRecord> parser(std::ifstream &file) {
-    static auto springs_data = std::vector<char>();
+using cache_t = std::unordered_map<hot_springs::record, std::uint64_t>;
+
+std::vector<hot_springs::record> parser(std::ifstream &file) {
+    static auto springs_data = std::vector<std::uint8_t>();
     static auto criteria_data = std::vector<std::uint8_t>();
     auto spring_indices = std::vector<std::size_t>({0});
     auto criteria_indices = std::vector<std::size_t>({0});
@@ -35,7 +37,7 @@ std::vector<ConditionRecord> parser(std::ifstream &file) {
         criteria_indices.emplace_back(criteria_data.size());
     }
 
-    auto records = std::vector<ConditionRecord>();
+    auto records = std::vector<hot_springs::record>();
     for (std::size_t i = 0; i < spring_indices.size() - 1; ++i) {
         const auto spring_begin = springs_data.data() + spring_indices[i];
         const auto spring_size = spring_indices[i + 1] - spring_indices[i];
@@ -49,15 +51,14 @@ std::vector<ConditionRecord> parser(std::ifstream &file) {
     return records;
 }
 
-std::uint64_t get_arrangements(const ConditionRecord &record,
-                               std::unordered_map<ConditionRecord, std::uint64_t> &cache) {
+std::uint64_t get_arrangements(const hot_springs::record &record, cache_t &cache) {
     const auto &[springs, criteria, size] = record;
 
     if (springs.empty()) {
         return criteria.empty() || (criteria.size() == 1 && criteria[0] == size);
     }
 
-    const auto cache_key = ConditionRecord{springs, criteria, size};
+    const auto cache_key = hot_springs::record{springs, criteria, size};
     if (cache.contains(cache_key)) {
         return cache[cache_key];
     }
@@ -85,35 +86,33 @@ std::uint64_t get_arrangements(const ConditionRecord &record,
     return arrangements;
 }
 
-std::uint64_t part_one(const std::vector<ConditionRecord> &condition_records) {
-    return std::transform_reduce(policy, condition_records.begin(), condition_records.end(), 0ull, std::plus<>(),
-                                 [](const auto &record) {
-                                     auto cache = std::unordered_map<ConditionRecord, std::uint64_t>(4096);
-                                     return get_arrangements(record, cache);
-                                 });
+std::uint64_t part_one(const std::vector<hot_springs::record> &records) {
+    return std::transform_reduce(policy, records.begin(), records.end(), 0ull, std::plus(), [](const auto &record) {
+        auto cache = cache_t(1ull << 10ull);
+        return get_arrangements(record, cache);
+    });
 }
 
-std::uint64_t part_two(const std::vector<ConditionRecord> &condition_records) {
-    return std::transform_reduce(
-            policy, condition_records.begin(), condition_records.end(), 0ull, std::plus<>(), [](const auto &record) {
-                const auto &[springs, criteria, size] = record;
+std::uint64_t part_two(const std::vector<hot_springs::record> &records) {
+    return std::transform_reduce(policy, records.begin(), records.end(), 0ull, std::plus(), [](const auto &record) {
+        const auto &[springs, criteria, size] = record;
 
-                auto expanded_springs = std::vector<char>();
-                auto expanded_criteria = std::vector<std::uint8_t>();
-                expanded_springs.reserve(springs.size() * 5 + 4);
-                expanded_criteria.reserve(criteria.size() * 5);
+        auto expanded_springs = std::vector<std::uint8_t>();
+        auto expanded_criteria = std::vector<std::uint8_t>();
+        expanded_springs.reserve(springs.size() * 5 + 4);
+        expanded_criteria.reserve(criteria.size() * 5);
 
-                for (std::size_t i = 0; i < 5; ++i) {
-                    if (i > 0) {
-                        expanded_springs.push_back('?');
-                    }
-                    expanded_springs.insert(expanded_springs.end(), springs.begin(), springs.end());
-                    expanded_criteria.insert(expanded_criteria.end(), criteria.begin(), criteria.end());
-                }
+        for (std::size_t i = 0; i < 5; ++i) {
+            if (i > 0) {
+                expanded_springs.push_back('?');
+            }
+            expanded_springs.insert(expanded_springs.end(), springs.begin(), springs.end());
+            expanded_criteria.insert(expanded_criteria.end(), criteria.begin(), criteria.end());
+        }
 
-                auto cache = std::unordered_map<ConditionRecord, std::uint64_t>(4096);
-                return get_arrangements({expanded_springs, expanded_criteria}, cache);
-            });
+        auto cache = cache_t(1ull << 15ull);
+        return get_arrangements({expanded_springs, expanded_criteria}, cache);
+    });
 }
 
 int main() {
