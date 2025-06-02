@@ -1,6 +1,6 @@
 // --- Day 17: Clumsy Crucible ---
 
-#include "clumsy_crucible.h"
+#include "crucible.h"
 #include "solver.h"
 
 #include <fstream>
@@ -13,7 +13,7 @@ std::pair<std::vector<std::uint8_t>, std::size_t> parser(std::ifstream &file) {
     std::vector<std::uint8_t> heat_map;
     for (std::string line; getline(file, line); width = line.length()) {
         for (const auto block: line) {
-            heat_map.push_back(block - '0');
+            heat_map.emplace_back(block - '0');
         }
     }
 
@@ -22,8 +22,9 @@ std::pair<std::vector<std::uint8_t>, std::size_t> parser(std::ifstream &file) {
 
 int get_heat_loss(const std::vector<std::uint8_t> &heat_map, const std::size_t width, const int break_duration,
                   const int max_speed) {
-    auto crucible_queue = std::priority_queue<Crucible, std::vector<Crucible>, std::greater<>>();
-    auto crucible_history = std::unordered_set<Crucible>(10'000);
+    auto crucible_queue =
+            std::priority_queue<clumsy_crucible::crucible, std::vector<clumsy_crucible::crucible>, std::greater<>>();
+    auto crucible_history = std::unordered_set<clumsy_crucible::crucible>(10'000);
     crucible_queue.emplace(0, 0, 0, 0, 0, 0);
 
     const auto height = heat_map.size() / width;
@@ -68,7 +69,8 @@ int get_heat_loss(const std::vector<std::uint8_t> &heat_map, const std::size_t w
             auto next_y = y + dy;
 
             if (next_x >= 0 && next_x < width && next_y >= 0 && next_y < height) {
-                crucible_queue.emplace(next_x, next_y, dx, dy, speed + 1, heat_loss + heat_map[next_y * width + next_x]);
+                crucible_queue.emplace(next_x, next_y, dx, dy, speed + 1,
+                                       heat_loss + heat_map[next_y * width + next_x]);
             }
         }
     }
