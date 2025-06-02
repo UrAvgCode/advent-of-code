@@ -1,43 +1,60 @@
 #pragma once
 
-#include "benchmark.h"
-
+#include <chrono>
+#include <filesystem>
 #include <fstream>
-#include <iomanip>
-#include <iostream>
+#include <print>
 #include <sstream>
-#include <string>
 
 class Solver {
-    const int _year;
-    const int _day;
-    const std::string _name;
-
-    int current_part = 1;
-
 public:
-    Solver(const int year, const int day, const std::string &name) : _year(year), _day(day), _name(name) {
-        std::cout << "--- Day " << day << ": " << name << " ---" << std::endl;
+    Solver(const int year, const int day, const char *name) : _year(year), _day(day), _name(name) {
+        std::println("--- Day {}: {} ---", day, name);
     }
 
     template<typename Func, typename... Args>
     void operator()(Func func, Args... args) {
-        const auto start = benchmark::start();
-        std::cout << "\nPart " << current_part++ << ": " << func(args...) << std::endl;
-        benchmark::end(start);
+        const auto start = std::chrono::high_resolution_clock::now();
+
+        std::println("\nPart {}: {}", _current_part++, func(args...));
+
+        const auto end = std::chrono::high_resolution_clock::now();
+        const auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
+        auto output = static_cast<double>(duration.count());
+
+        const char *unit;
+        if (output >= 100'000'000) {
+            output /= 1'000'000'000;
+            unit = "s";
+        } else if (output >= 1'000) {
+            output /= 1'000'000;
+            unit = "ms";
+        } else {
+            output /= 1'000;
+            unit = "us";
+        }
+
+        std::println("Time: {}{}", output, unit);
     }
 
     template<typename Func>
     auto parse_file(Func parser) {
-        std::stringstream stream;
+        auto stream = std::stringstream();
         stream << "../../input/" << _year << "/day_" << std::setw(2) << std::setfill('0') << _day << "/input.txt";
 
-        std::string filename = stream.str();
-        std::ifstream file(filename);
+        const auto filename = stream.str();
+        auto file = std::ifstream(filename);
         if (!file) {
             throw std::runtime_error("unable to open file: " + filename);
         }
 
         return parser(file);
     }
+
+private:
+    const int _year;
+    const int _day;
+    const char *_name;
+
+    int _current_part = 1;
 };
