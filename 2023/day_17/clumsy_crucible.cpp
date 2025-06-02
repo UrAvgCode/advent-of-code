@@ -8,6 +8,8 @@
 #include <unordered_set>
 #include <vector>
 
+using heap_t = std::priority_queue<clumsy_crucible::crucible, std::vector<clumsy_crucible::crucible>, std::greater<>>;
+
 std::pair<std::vector<std::uint8_t>, std::size_t> parser(std::ifstream &file) {
     std::size_t width;
     std::vector<std::uint8_t> heat_map;
@@ -20,62 +22,61 @@ std::pair<std::vector<std::uint8_t>, std::size_t> parser(std::ifstream &file) {
     return {heat_map, width};
 }
 
-int get_heat_loss(const std::vector<std::uint8_t> &heat_map, const std::size_t width, const int break_duration,
-                  const int max_speed) {
-    auto crucible_queue =
-            std::priority_queue<clumsy_crucible::crucible, std::vector<clumsy_crucible::crucible>, std::greater<>>();
-    auto crucible_history = std::unordered_set<clumsy_crucible::crucible>(10'000);
-    crucible_queue.emplace(0, 0, 0, 0, 0, 0);
+std::uint16_t get_heat_loss(const std::vector<std::uint8_t> &heat_map, const std::size_t width,
+                            const std::uint16_t break_duration, const std::uint16_t max_speed) {
+    auto crucible_history = std::unordered_set<clumsy_crucible::crucible>(1ull << 10ull);
+
+    auto crucible_queue = heap_t();
+    crucible_queue.emplace();
 
     const auto height = heat_map.size() / width;
-    const auto destination = std::pair{width - 1, height - 1};
+    const auto destination_x = width - 1;
+    const auto destination_y = height - 1;
 
     while (!crucible_queue.empty()) {
         const auto crucible = crucible_queue.top();
         crucible_queue.pop();
 
-        if (crucible_history.count(crucible) == 1) {
+        if (crucible_history.contains(crucible)) {
             continue;
         }
 
         crucible_history.insert(crucible);
-        auto [x, y, dx, dy, speed, heat_loss] = crucible;
+        const auto &[x, y, dx, dy, speed, heat_loss] = crucible;
 
-        if (std::tie(x, y) == destination && crucible.speed >= break_duration) {
+        if (x == destination_x && y == destination_y && crucible.speed >= break_duration) {
             return heat_loss;
         }
 
         if (speed >= break_duration || speed == 0) {
             if (dx == 0) {
-                for (int i: {1, -1}) {
-                    if (x + i >= 0 && x + i < width) {
-                        const auto additional_heat_loss = heat_map[y * width + x + i];
-                        crucible_queue.emplace(x + i, y, i, 0, 1, heat_loss + additional_heat_loss);
+                for (const auto ndx: {1, -1}) {
+                    if (x + ndx >= 0 && x + ndx < width) {
+                        const auto additional_heat_loss = heat_map[y * width + x + ndx];
+                        crucible_queue.emplace(x + ndx, y, ndx, 0, 1, heat_loss + additional_heat_loss);
                     }
                 }
             }
 
             if (dy == 0) {
-                for (int i: {1, -1}) {
-                    if (y + i >= 0 && y + i < height) {
-                        crucible_queue.emplace(x, y + i, 0, i, 1, heat_loss + heat_map[(y + i) * width + x]);
+                for (const auto ndy: {1, -1}) {
+                    if (y + ndy >= 0 && y + ndy < height) {
+                        crucible_queue.emplace(x, y + ndy, 0, ndy, 1, heat_loss + heat_map[(y + ndy) * width + x]);
                     }
                 }
             }
         }
 
         if (speed < max_speed) {
-            auto next_x = x + dx;
-            auto next_y = y + dy;
-
-            if (next_x >= 0 && next_x < width && next_y >= 0 && next_y < height) {
-                crucible_queue.emplace(next_x, next_y, dx, dy, speed + 1,
-                                       heat_loss + heat_map[next_y * width + next_x]);
+            const auto nx = x + dx;
+            const auto ny = y + dy;
+            if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
+                crucible_queue.emplace(nx, ny, dx, dy, speed + 1, heat_loss + heat_map[ny * width + nx]);
             }
         }
     }
 
-    return -1;
+    return 0;
 }
 
 int main() {
