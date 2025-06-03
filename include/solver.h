@@ -3,8 +3,9 @@
 #include <chrono>
 #include <filesystem>
 #include <fstream>
+#include <functional>
 #include <print>
-#include <sstream>
+#include <utility>
 
 class Solver {
 public:
@@ -13,42 +14,42 @@ public:
     }
 
     template<typename Func, typename... Args>
-    void operator()(Func func, Args... args) {
+    void operator()(Func &&func, Args &&...args) {
         const auto start = std::chrono::high_resolution_clock::now();
 
-        std::println("\nPart {}: {}", _current_part++, func(args...));
+        const auto result = std::invoke(std::forward<Func>(func), std::forward<Args>(args)...);
 
         const auto end = std::chrono::high_resolution_clock::now();
         const auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
         auto output = static_cast<double>(duration.count());
 
         const char *unit;
-        if (output >= 100'000'000) {
+        if (output >= 1'000'000'000) {
             output /= 1'000'000'000;
             unit = "s";
-        } else if (output >= 1'000) {
+        } else if (output >= 1'000'000) {
             output /= 1'000'000;
             unit = "ms";
-        } else {
+        } else if (output >= 1'000) {
             output /= 1'000;
-            unit = "us";
+            unit = "μs";
+        } else {
+            unit = "ns";
         }
 
-        std::println("Time: {}{}", output, unit);
+        std::println("\nPart {}: {}", _current_part++, result);
+        std::println("Time: {:.3f}{}", output, unit);
     }
 
     template<typename Func>
-    auto parse_file(Func parser) {
-        auto stream = std::stringstream();
-        stream << "../../input/" << _year << "/day_" << std::setw(2) << std::setfill('0') << _day << "/input.txt";
-
-        const auto filename = stream.str();
+    auto parse_file(Func &&parser) {
+        const auto filename = std::format("../../input/{}/day_{:02d}/input.txt", _year, _day);
         auto file = std::ifstream(filename);
-        if (!file) {
-            throw std::runtime_error("unable to open file: " + filename);
+        if (!file.is_open()) {
+            throw std::runtime_error(std::format("unable to open file: {}", filename));
         }
 
-        return parser(file);
+        return std::invoke(std::forward<Func>(parser), file);
     }
 
 private:
